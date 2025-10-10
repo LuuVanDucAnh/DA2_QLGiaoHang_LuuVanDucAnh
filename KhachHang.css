@@ -11,6 +11,12 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+/* -------------Element---------- */
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -19,10 +25,29 @@ a {
     text-decoration: none;
     color: black;
 }
+.open {
+    display: block;
+}
+
+.close {
+    display: none;
+}
+
+.err_404 {
+    margin: 0px auto;
+    width: 70%;
+    height: 100%;
+}
+
+.img_404 {
+    
+    width: 100%;
+    height: 100%;
+}
 /*--------------------------------Header-----------------------------*/
 /*-------------Header_Top---------------*/
 .container {
-    max-width: 1130px;
+    max-width: 1300px;
     margin: 0px auto;
 }
 
@@ -199,4 +224,96 @@ a {
 
 .cart a span {
     font-size: 14px;
+}
+
+/*---------------Header Nav----------------------*/
+.header_nav{
+    box-shadow: 0px 5px 10px #dddddd;
+}
+.nav{
+    display: flex;
+    list-style: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 54px;
+    justify-content: space-between;
+    
+}
+.nav::-webkit-scrollbar-thumb {
+    max-width: 10px;
+    background-color: var(--orange);
+    border-radius: 10px;
+}
+.nav::-webkit-scrollbar-thumb {
+    max-width: 10px;
+    background-color: var(--orange);
+    border-radius: 10px;
+}
+
+.nav li a {
+    position: relative;
+    display: block;
+    padding: 15px 30px;
+    font-size: 12pt;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 450;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    
+}
+/* Gạch dưới từ giữa đẩy ra */
+.nav li a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    width: 100%;
+    height: 3px;
+    background-color: var(--orange);
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav li a:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+/* -------------------Main---------------- */
+
+/* -----Slide Show----- */
+.slide_show {
+    width: 100%;
+    height: 520px;
+    background-color: #cccccc;
+    margin: 20px 0px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide_show img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+}
+
+.slide_show button {
+    position: absolute;
+    font-size: 20px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff8c;
+}
+
+.prev_btn {
+    top: 45%;
+    
+}
+
+.next_btn {
+    right: 0;
+    top: 45%;
 }
