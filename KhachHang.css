@@ -427,6 +427,7 @@ a {
     display: block;
     border-radius: 5px;
     border: solid 1px #ccc;
+    object-fit: cover;
 }
 
 .product_item h3 {
