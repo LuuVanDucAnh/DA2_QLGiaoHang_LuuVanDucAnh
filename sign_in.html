@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./assets/img/Logo_icon.png">
+    <link rel="icon" href="./img/Logo.png">
     <link rel="stylesheet" href="./KhachHang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>DA FOOD</title>
 </head>
 <body>
-    <div class="header">
-        <div class="header_top">
-            <div class="container">
+    <div class = "header">
+        <div class = "header_top">
+            <div class = "container">
                 <div class="header_top_left">
                     <div class="header_logo">
-                        <a href="index.html"><img class="logo_img" src="" alt="VT FOOD"></a>
+                        <a href="KhachHang.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
                     </div>
                 </div>
                 <div class="header_top_middle">
                     <form action="" class="form_search">
-                        <span class="search_btn">
+                          <span class="search_btn">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
                         <input autocomplete="off"type="text" placeholder="Tìm kiếm món ăn">
@@ -32,14 +32,17 @@
                 <div class="header_top_right">
                     <ul class="header_list">
                         <li class="account">
-                            <i class="fa-solid fa-user"></i>
-                            <div class="text">
-                                <span class="text_dndk">Đăng nhập / Đăng ký</span>
-                                <span class="text_tk">Tài khoản <i class="fa-solid fa-caret-down"></i></span>
-                            </div>
-                            <ul class="account_manager">
-                                <li><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
-                                <li><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                           <i class="fa-solid fa-user"></i>
+                           <div class="text">
+                                <span id="text_tk" class="text_dndk">Đăng nhập / Đăng ký</span>
+                                <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
+                           </div>
+                           <ul class="account_manager">
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                                <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
+                                <li class="yes_acc"><a href=""><i class="fa-regular fa-circle-user"></i> Tài khoản của tôi</a></li>
+                                <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </li>
                         <li class="cart">
@@ -54,11 +57,10 @@
                 </div>
             </div>
         </div>
-    </div>
     <div class="main main_sign">
         <div class="container container_sign">
             <div class="logo_sign">
-                <img src="" alt="">
+                <img src="./img/Logo_icon.png" alt="">
             </div>
             <div class="sign">
                 <h2>Đăng nhập</h2>
@@ -78,7 +80,7 @@
         <div class="container">
             <div class="footer_top">
                 <div class="footer_logo">
-                    <img src="" alt="DA FOOD">
+                    <img src="./img/Logo_icon.png" alt="DA FOOD">
                 </div>
                 <div class="footer_email">
                     <div class="footer_email_text">
