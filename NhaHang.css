@@ -1,0 +1,667 @@
+/* ---------------Biến-------------- */
+:root {
+    --orange: #f08550;
+    --text-color: #ffffff;
+}
+
+
+/* -----------Reset CSS------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* -------------Element---------- */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+.open {
+    display: block;
+}
+
+.close {
+    display: none;
+}
+
+.err_404 {
+    margin: 0px auto;
+    width: 70%;
+    height: 100%;
+}
+
+.img_404 {
+    
+    width: 100%;
+    height: 100%;
+}
+/*--------------------------------Header-----------------------------*/
+/*-------------Header_Top---------------*/
+.container {
+    max-width: 1300px;
+    margin: 0px auto;
+}
+
+.header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 9999999999;
+    background-color: white;
+}
+
+.header_top {
+    width: 100%;
+    box-shadow: inset 0px -0.5px 0px #e6e6e6;
+}
+
+.header_top .container {
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header_logo {
+    width: 100px;
+    height: 50px;
+}
+
+.Logo_icon {
+    width: 100%;
+    height: 100%;
+    
+}
+
+.form_search {
+    width: 400px;
+    height: 40px;
+    background-color: #f0f0f0;
+    padding: 7px 10px;
+    border-radius: 30px;
+    display: flex;
+    gap: 10px;
+    font-size: 18px;
+    align-items: center;
+    justify-content: space-between;
+}
+.search_btn {
+    color: #707070;
+}
+
+.form_search > input {
+    width: 70%;
+    font-size: 13px;
+    border: none;
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+.form_search > button {
+    height: 100%;
+    font-size: 14px;
+    border: none;
+    padding: 5px 15px;
+    background-color: var(--orange);
+    color: var(--text-color);
+    border-radius: 18px;
+}
+
+.header_list {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 20px;
+}
+
+.header_list > li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header_list > li > i {
+    font-size: 28px;
+    color: var(--orange);
+    position: relative;
+}
+
+.text_dndk {
+    display: flex;
+    font-size: 12px;
+}
+
+.text_tk {
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.account {
+    position: relative;
+}
+
+.account:hover .account_manager {
+    display: block;
+}
+
+.account_manager {
+    list-style: none;
+    width: 180px;
+    line-height: 28px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 9999999999;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px #dddddd;
+    overflow: hidden;
+    display: none;
+}
+
+.account_manager li {
+    font-size: 14px;
+    font-weight: 400;
+    color: #707070;
+    cursor: pointer;
+}
+
+.account_manager li i {
+    font-size: 13px;
+    color: var(--orange);
+    margin-right: 5px;
+}
+
+.account_manager a:hover {
+    background-color: #f0f0f0;
+    color: var(--orange);
+}
+
+.account_manager a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    color: black;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+#number_items {
+    position: absolute;
+    top: -13px;
+    right: -20px;
+    font-size: 13px;
+    color: var(--text-color);
+    background-color: var(--orange);
+    padding: 3px 6px;
+    border-radius: 100%;
+    text-align: center;
+}
+
+.cart a {
+    color: black;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart a i {
+    font-size: 28px;
+    color: var(--orange);
+    position: relative;
+}
+
+.cart a span {
+    font-size: 14px;
+}
+
+
+.product-manager {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.product-manager h2 {
+    text-transform: uppercase;
+    color: var(--orange);
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.product-manager label {
+    font-size: 16px;
+    color: #555;
+    margin-right: 10px;
+}
+
+.product-manager h3 {
+    font-size: 24px;
+    color: var(--orange);
+    margin-bottom: 20px;
+}
+
+.product-manager input {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: calc(100% - 24px);
+    max-width: 300px;
+    outline: none;
+}
+
+.product-manager button {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: var(--orange);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.product-manager button:hover {
+    color: black;
+}
+
+#category {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#product-list {
+    /* Loại bỏ các thuộc tính Flexbox không cần thiết ở đây */
+    display: block; /* Chỉ là container chứa các item */
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1000px; /* Điều chỉnh lại độ rộng phù hợp */
+    /* Các thuộc tính khác giữ nguyên */
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    overflow-x: hidden; /* Tránh thanh cuộn ngang không mong muốn */
+}
+
+.product_item { /* Đổi từ .product-item sang .product_item theo HTML của bạn */
+    display: flex; 
+    align-items: center; 
+    flex-wrap: nowrap;
+    
+    /* Thiết kế Box */
+    border: 1px solid #e0e0e0; /* Viền nhẹ */
+    border-radius: 6px;
+    padding: 15px; /* Tăng padding để đẹp hơn */
+    margin-bottom: 12px;
+    gap: 10px; /* Khoảng cách giữa các box */
+    background-color: #ffffff; /* Nền trắng */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    width: 100%; 
+    min-width: fit-content; /* Đảm bảo item không bị co quá mức */
+    transition: box-shadow 0.2s;
+}
+
+/* KHẮC PHỤC LỖI QUAN TRỌNG: GHI ĐÈ THUỘC TÍNH FLEX CHUNG */
+/* XÓA hoặc GHI ĐÈ thiết lập flex: 1 và min-width chung,
+   vì các thiết lập riêng (như .img-box, .name-box) đã được định nghĩa bên dưới */
+.product_item .border {
+    flex: initial; /* Đặt lại thành giá trị mặc định để các thiết lập riêng hoạt động */
+    min-width: unset;
+    padding: 0; /* Xóa padding/margin mặc định của class 'border' nếu có */
+    border: none !important; /* Đảm bảo bỏ viền của class 'border' */
+    text-align: left; /* Đặt lại căn lề mặc định, sẽ được ghi đè lại nếu cần */
+}
+/* ----------------------------------------------------------------
+   2. Định dạng chi tiết các Box (Giữ nguyên các giá trị bạn đã thiết lập)
+   ---------------------------------------------------------------- */
+
+/* Ảnh (Cố định, flex-shrink: 0) */
+.img-box {
+    width: 120px;
+    height: 85px; 
+    margin-right: 15px; /* Giảm khoảng cách */
+}
+
+.img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Tên (Cố định, flex-shrink: 0) */
+.name-box {
+    width: 180px; 
+    flex-shrink: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Giá (Cố định, flex-shrink: 0) */
+.price-box {
+    width: 150px; 
+    flex-shrink: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #cc3333;
+    text-align: right;
+    margin-right: 15px;
+}
+
+/* Mô tả (Linh hoạt, flex-grow: 1) */
+.desc-box {
+    flex-grow: 1; 
+    min-width: 200px; /* Đặt min-width để mô tả không bị quá hẹp */
+    flex-shrink: 1; 
+    font-size: 0.95em;
+    color: #777;
+    font-style: italic;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+/* Nút Xóa (Cố định, flex-shrink: 0) */
+.btn-box {
+    width: 80px; 
+    flex-shrink: 0;
+    margin-left: 15px;
+    display: flex;
+    justify-content: flex-end; 
+}
+
+.btn-box button {
+    /* Sửa: Đặt nền màu cam #f0ad4e và chữ màu trắng #fff */
+    background-color: #f0ad4e; /* Màu cam giống mẫu */
+    color: #fff;              /* Chữ màu trắng */
+    
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 70px;
+    
+    /* Loại bỏ transition nếu bạn không muốn hiệu ứng */
+    /* XÓA: transition: background-color 0.3s; */
+}.footer {
+    width: 100%;
+    background-color: #eeeeee;
+    padding: 10px 10px;
+    margin-top: 20px;
+    border-top: 5px solid var(--orange);
+}
+
+.footer .container .footer_logo {
+    width: 450px;
+    height: 100px;
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+}
+
+.footer .container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.footer_top {
+    display: flex;
+    align-items: center;
+    padding: 20px 0px;
+    border-bottom: 1px solid #ccc;
+    gap: 40px;
+}
+
+.footer_email {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer_email_text h3 {
+    font-size: 23px;
+    font-weight: 600;
+    color: black;
+    text-transform: uppercase;
+}
+
+.footer_email_text p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #707070;
+}
+
+.footer_form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer_form input {
+    width: 300px;
+    height: 40px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.footer_form button {
+    padding: 5px 15px;
+    height: 40px;
+    font-size: 14px;
+    border: none;
+    background-color: var(--orange);
+    color: var(--text-color);
+    border-radius: 20px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.footer_form button:hover {
+    border: 1px solid #ccc;
+    color: black;
+    transform: scale(1.05);
+}
+
+.widget_row {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0px;
+    gap: 60px;
+}
+
+.widget_row_col {
+    width: 25%;
+}
+
+.widget_title {
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.widget_title::after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 2px;
+    background-image: linear-gradient(to right, var(--orange), transparent);
+    margin-top: 5px;
+}
+
+.widget_row_col_content {
+    font-size: 16px;
+
+}
+
+.widget_social {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.widget_social a {
+    display: block;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 45px;
+    font-size: 18px;
+    color: black;
+    border: 1px solid black;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50%;
+}
+
+.widget_social a:hover {
+    transform: scale(1.2);
+    background-color: var(--orange);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+}
+
+.widget_contact {
+    list-style: none;
+    margin-top: 10px;
+    line-height: 30px;
+}
+
+.contact_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact_item_icon {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+    font-size: 14px;
+    color: black;
+}
+
+.footer_bottom {
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0px;
+}
+/* -------------------Đăng nhập, Đăng ký---------------- */
+.container_sign {
+    max-width: 1130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 0px;
+}
+
+.logo_sign {
+    width: 45%;
+    height: 150px;
+    margin-bottom: 20px;
+}
+
+.logo_sign img {
+    width: 100%;
+    height: 100%;
+    
+}
+
+.sign {
+    width: 35%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px #cccccc;
+    text-align: center;
+    display: block;
+
+}
+
+.sign h2 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: var(--orange);
+}
+
+.sign input {
+    width: 80%;
+    height: 40px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.sign input:focus {
+    border: 1px solid var(--orange);
+}
+
+.sign button {
+    padding: 5px 15px;
+    height: 40px;
+    font-size: 14px;
+    border: none;
+    background-color: var(--orange);
+    color: var(--text-color);
+    border-radius: 20px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 10px;
+}
+
+.sign button:hover {
+    border: 1px solid #ccc;
+    color: black;
+    transform: scale(1.05);
+}
+
+.sign span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #707070;
+}
+
+.sign span a {
+    color: var(--orange);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+
+
