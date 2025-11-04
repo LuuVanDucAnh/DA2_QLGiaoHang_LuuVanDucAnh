@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./img/Logo_icon.png">
+  
+    <link rel="stylesheet" href="./NhaHang.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>DA FOOD</title>
+</head>
+<body>
+    <div class = "header">
+        <div class = "header_top">
+            <div class = "container">
+                <div class="header_top_left">
+                    <div class="header_logo">
+                        <a href="KhachHang.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
+                    </div>
+                </div>
+                <div class="header_top_middle">
+                    <form action="" class="form_search">
+                          <span class="search_btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input autocomplete="off"type="text" placeholder="Tìm kiếm món ăn">
+                        <button>
+                            <i class="fa-solid fa-filter"></i>
+                            Lọc
+                        </button>
+                    </form>
+                </div>
+                <div class="header_top_right">
+                    <ul class="header_list">
+                        <li class="account">
+                           <i class="fa-solid fa-user"></i>
+                           <div class="text">
+                                <span id="text_tk" class="text_dndk">Đăng nhập / Đăng ký</span>
+                                <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
+                           </div>
+                           <ul class="account_manager">
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                                <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
+                                <li class="yes_acc"><a href=""><i class="fa-regular fa-circle-user"></i> Tài khoản của tôi</a></li>
+                                <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                        <li class="cart">
+                            <a href="cart.html">
+                                <i class="fa-solid fa-cart-shopping"> 
+                                <div id="number_items">0</div>
+                            </i>
+                            <span>Giỏ hàng</span>
+                            </a>
+                        </li>
+                        <li class="Notification">
+                            <i class="fa-solid fa-bell">
+                                <div id="number_items">0</div>
+                            </i>
+                            <span>Thông báo </span>
+                            
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
