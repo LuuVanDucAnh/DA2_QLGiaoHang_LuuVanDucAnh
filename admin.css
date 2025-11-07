@@ -1,0 +1,211 @@
+
+
+/* ---------------Biến-------------- */
+:root {
+    --orange: #f08550;
+    --text-color: #ffffff;
+}
+
+
+/* -----------Reset CSS------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* -------------Element---------- */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+.open {
+    display: block;
+}
+
+.close {
+    display: none;
+}
+
+.err_404 {
+    margin: 0px auto;
+    width: 70%;
+    height: 100%;
+}
+
+.img_404 {
+    
+    width: 100%;
+    height: 100%;
+}
+/*--------------------------------Header-----------------------------*/
+/*-------------Header_Top---------------*/
+.container {
+    max-width: 1300px;
+    margin: 0px auto;
+}
+
+.header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 9999999999;
+    background-color: white;
+}
+
+.header_top {
+    width: 100%;
+    box-shadow: inset 0px -0.5px 0px #e6e6e6;
+}
+
+.header_top .container {
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header_logo {
+    width: 100px;
+    height: 50px;
+}
+
+.Logo_icon {
+    width: 100%;
+    height: 100%;
+    
+}
+.header_list {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 20px;
+}
+
+.header_list > li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header_list > li > i {
+    font-size: 28px;
+    color: var(--orange);
+    position: relative;
+}
+
+.text_dndk {
+    display: flex;
+    font-size: 12px;
+}
+
+.text_tk {
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.account {
+    position: relative;
+}
+
+.account:hover .account_manager {
+    display: block;
+}
+
+.account_manager {
+    list-style: none;
+    width: 180px;
+    line-height: 28px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 9999999999;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px #dddddd;
+    overflow: hidden;
+    display: none;
+}
+
+.account_manager li {
+    font-size: 14px;
+    font-weight: 400;
+    color: #707070;
+    cursor: pointer;
+}
+
+.account_manager li i {
+    font-size: 13px;
+    color: var(--orange);
+    margin-right: 5px;
+}
+
+.account_manager a:hover {
+    background-color: #f0f0f0;
+    color: var(--orange);
+}
+
+.account_manager a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    color: black;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+#number_items {
+    position: absolute;
+    top: -13px;
+    right: -20px;
+    font-size: 13px;
+    color: var(--text-color);
+    background-color: var(--orange);
+    padding: 3px 6px;
+    border-radius: 100%;
+    text-align: center;
+}
+.main{
+    display:flex;
+}
+
+
+/*-------------main_left-------------*/
+.main_left{
+    width: 250px;
+    background-color: #f08550;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+   
+}
+.menu a {
+    display:block;
+    color: white;
+    padding: 10px 15px;
+    margin: 5px 0;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.menu a:hover,
+.menu a.active {
+    background-color: rgb(255, 255, 255, 0.2);
+}
+
+/*-------------main_right----------------*/
+.main_right{
+    flex:1;
+    padding: 20px 40px;
+    background-color: rgb(131, 184, 230);
+}
+
