@@ -206,7 +206,7 @@ a {
 .main_right{
     flex:1;
     padding: 20px 40px;
-    
+    background-color: #ea9a72;
 }
 .welcome{
     background-color: white;
