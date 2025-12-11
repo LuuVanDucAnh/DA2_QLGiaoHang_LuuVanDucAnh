@@ -735,12 +735,42 @@
             </div>
         </div>
     </div>
+    <!-- Modal Popup cho đặt hàng -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-product-name">Tàu hũ chiên giòn</h2>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modal-product-image" src="" alt="Product">
+                </div>
+                <div class="modal-info">
+                    <p class="modal-price">Giá: <span id="modal-product-price">30.000</span> VNĐ</p>
+                    <p class="modal-description">Mô tả: <span id="modal-product-description">Tàu hũ chiên giòn với tỏi ớt và gia vị.</span></p>
+                    <div class="modal-quantity">
+                        <label>Số lượng:</label>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decrease-qty">-</button>
+                            <input type="number" id="product-quantity" value="1" min="1" readonly>
+                            <button class="quantity-btn" id="increase-qty">+</button>
+                        </div>
+                    </div>
+                    <p class="modal-total">Thành tiền: <span id="modal-total-price">30.000</span> VNĐ</p>
+                    <button class="btn-add-to-cart" id="btn-add-to-cart">Thêm vào giỏ hàng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="../js/dn_dk.js"></script>
+    <script src="../js/index.js"></script>
     <script>
         // Khởi tạo trang khi DOM đã tải xong
         document.addEventListener('DOMContentLoaded', function() {
-            initPage();
+            if (typeof initPage === 'function') {
+                initPage();
+            }
         });
     </script>
 </body>
