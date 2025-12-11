@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../img/Logo_icon.png">
-  
     <link rel="stylesheet" href="../css/NhaHang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <title>DA FOOD</title>
+    <title>Giao diện Nhà Hàng - DA FOOD</title>
 </head>
 <body>
-    <div class = "header">
+   <div class = "header">
         <div class = "header_top">
             <div class = "container">
                 <div class="header_top_left">
@@ -18,18 +17,7 @@
                         <a href="index.html"><img class="Logo_icon" src="../img/Logo_icon.png"></a>
                     </div>
                 </div>
-                <div class="header_top_middle">
-                    <form action="" class="form_search">
-                          <span class="search_btn">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input autocomplete="off"type="text" placeholder="Tìm kiếm món ăn">
-                        <button>
-                            <i class="fa-solid fa-filter"></i>
-                            Lọc
-                        </button>
-                    </form>
-                </div>
+                
                 <div class="header_top_right">
                     <ul class="header_list">
                         <li class="account">
@@ -46,280 +34,195 @@
                                 <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </li>
-                        <li class="cart">
-                            <a href="cart.html">
-                                <i class="fa-solid fa-cart-shopping"> 
-                                <div id="number_items">0</div>
-                            </i>
-                            <span>Giỏ hàng</span>
-                            </a>
-                        </li>
                         <li class="Notification">
                             <i class="fa-solid fa-bell">
-                                <div id="number_items">0</div>
+                                <div id="number_notifications">0</div>
                             </i>
                             <span>Thông báo đặt hàng</span>
-                            
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Radio buttons for tab switching (hidden) -->
+    <input type="radio" name="tab" id="tab-dashboard" checked style="display: none;">
+    <input type="radio" name="tab" id="tab-pending" style="display: none;">
+    <input type="radio" name="tab" id="tab-preparing" style="display: none;">
+    <input type="radio" name="tab" id="tab-ready" style="display: none;">
+    <input type="radio" name="tab" id="tab-completed" style="display: none;">
+    <input type="radio" name="tab" id="tab-products" style="display: none;">
+
     <div class="main">
-        <div class="container">
-            <div class="product-manager">
-                <h2>Quản lý sản phẩm</h2>
-                <label for="category">Chón nhóm món:</label>
-                <select id="category">
-                    <option value="mon_chay">Món chay</option>
-                    <option value="mon_man">Món mặn</option>
-                    <option value="mon_lau">Món lẩu</option>
-                    <option value="an_vat">Ăn vặt</option>
-                    <option value="nuoc_uong">Nước uống</option>
-                    <option value="hoa_qua">Hoa quả</option>
-                </select>
-                <h3>Thêm sản phẩm mới</h3>
-                <input autocomplete="off" type="text" id="new-name" placeholder="Tên món">
-                <input autocomplete="off" type="text" id="new-price" placeholder="Giá">
-                <input autocomplete="off" type="text" id="link-img" placeholder="Link ảnh">
-                <input autocomplete="off" type="text" id="new-description" placeholder="Mô tả">
-                <button onclick="addProduct()">Thêm sản phẩm</button>
-                <div id="product-list">
-                    <div class="product_item">
-                        <div class="border img-box">
-                            <img src="../img/Nam-dong.png">
-                        </div>
-                        <div class="border name-box">
-                            <strong>Nấm sốt đông</strong>
-                        </div>
-                        <div class="border price-box"> Giá: 20.000 VNĐ </div>
-                        <div class="border desc-box">
-                            <em>Nấm đông có sốt với nước tương và gia vị</em>
-                        </div>
-                        <div class="border btn-box">
-                            <button onclick="deleteAdminProduct">Xóa</button>
-                        </div>
-                        
+        <div class="main_left">
+            <nav class="menu">
+                <label for="tab-dashboard" class="menu-item">
+                    <i class="fa-solid fa-chart-line"></i> 
+                    <span>Dashboard</span>
+                </label>
+
+                <label for="tab-pending" class="menu-item">
+                    <i class="fa-solid fa-clock"></i> 
+                    <span>Đơn hàng chờ</span>
+                    <span class="badge" id="badge-pending">0</span>
+                </label>
+
+                <label for="tab-preparing" class="menu-item">
+                    <i class="fa-solid fa-utensils"></i> 
+                    <span>Đang làm món</span>
+                    <span class="badge" id="badge-preparing">0</span>
+                </label>
+
+                <label for="tab-ready" class="menu-item">
+                    <i class="fa-solid fa-check-circle"></i> 
+                    <span>Sẵn sàng giao</span>
+                    <span class="badge" id="badge-ready">0</span>
+                </label>
+
+                <label for="tab-completed" class="menu-item">
+                    <i class="fa-solid fa-clipboard-check"></i> 
+                    <span>Đã hoàn thành</span>
+                </label>
+
+                <label for="tab-products" class="menu-item">
+                    <i class="fa-solid fa-book"></i> 
+                    <span>Quản lý món ăn</span>
+                </label>
+            </nav>
+        </div>
+        
+        <div class="main_right">
+            <!-- Dashboard Tab -->
+            <section class="tab-content" id="dashboard">
+                <div class="welcome">
+                    <h3>Chào mừng, Nhà Hàng!</h3>
+                    <p>Quản lý đơn hàng và món ăn của bạn một cách hiệu quả</p>
+                </div>
+                
+                <div class="stats">
+                    <div class="card">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="stat-pending">0</span>
+                        <p>Đơn hàng chờ</p>
                     </div>
-                   
-                    <div class="product_item">
-                        <div class="border img-box">
-                            <img src="../img/Nam-dong.png">
-                        </div>
-                        <div class="border name-box">
-                            <strong>Nấm sốt đông</strong>
-                        </div>
-                        <div class="border price-box"> Giá: 20.000 VNĐ </div>
-                        <div class="border desc-box">
-                            <em>Nấm đông có sốt với nước tương và gia vị</em>
-                        </div>
-                        <div class="border btn-box">
-                            <button onclick="deleteAdminProduct">Xóa</button>
-                        </div>
-                        
+                    <div class="card">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span id="stat-preparing">0</span>
+                        <p>Đang làm món</p>
                     </div>
-                    <div class="product_item">
-                        <div class="border img-box">
-                            <img src="../img/Nam-dong.png">
-                        </div>
-                        <div class="border name-box">
-                            <strong>Nấm sốt đông</strong>
-                        </div>
-                        <div class="border price-box"> Giá: 20.000 VNĐ </div>
-                        <div class="border desc-box">
-                            <em>Nấm đông có sốt với nước tương và gia vị</em>
-                        </div>
-                        <div class="border btn-box">
-                            <button onclick="deleteAdminProduct">Xóa</button>
-                        </div>
+                    <div class="card">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span id="stat-ready">0</span>
+                        <p>Sẵn sàng giao</p>
                     </div>
-                    <div class="product_item">
-                        <div class="border img-box">
-                            <img src="../img/Nam-dong.png">
-                        </div>
-                        <div class="border name-box">
-                            <strong>Nấm sốt đông</strong>
-                        </div>
-                        <div class="border price-box"> Giá: 20.000 VNĐ </div>
-                        <div class="border desc-box">
-                            <em>Nấm đông có sốt với nước tương và gia vị</em>
-                        </div>
-                        <div class="border btn-box">
-                            <button onclick="deleteAdminProduct">Xóa</button>
-                        </div>
-                    </div>
-                    <div class="product_item">
-                        <div class="border img-box">
-                            <img src="../img/Nam-dong.png">
-                        </div>
-                        <div class="border name-box">
-                            <strong>Nấm sốt đông</strong>
-                        </div>
-                        <div class="border price-box"> Giá: 20.000 VNĐ </div>
-                        <div class="border desc-box">
-                            <em>Nấm đông có sốt với nước tương và gia vị</em>
-                        </div>
-                        <div class="border btn-box">
-                            <button onclick="deleteAdminProduct">Xóa</button>
-                        </div>
+                    <div class="card">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        <span id="stat-completed">0</span>
+                        <p>Đã hoàn thành</p>
                     </div>
                 </div>
-            </div>
+
+                <div class="recent-orders">
+                    <h4>Đơn hàng gần đây</h4>
+                    <div class="orders-list" id="recent-orders-list">
+                        <!-- Sẽ được load từ JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pending Orders Tab -->
+            <section class="tab-content" id="pending-orders">
+                <div class="section-header">
+                    <h3>Đơn hàng chờ xử lý</h3>
+                    <button class="btn-refresh" onclick="loadOrders()">
+                        <i class="fa-solid fa-rotate"></i> Làm mới
+                    </button>
+                </div>
+                <div class="orders-list" id="pending-orders-list">
+                    <!-- Sẽ được load từ JavaScript -->
+                </div>
+            </section>
+
+            <!-- Preparing Orders Tab -->
+            <section class="tab-content" id="preparing-orders">
+                <div class="section-header">
+                    <h3>Đơn hàng đang làm món</h3>
+                    <button class="btn-refresh" onclick="loadOrders()">
+                        <i class="fa-solid fa-rotate"></i> Làm mới
+                    </button>
+                </div>
+                <div class="orders-list" id="preparing-orders-list">
+                    <!-- Sẽ được load từ JavaScript -->
+                </div>
+            </section>
+
+            <!-- Ready Orders Tab -->
+            <section class="tab-content" id="ready-orders">
+                <div class="section-header">
+                    <h3>Đơn hàng sẵn sàng giao</h3>
+                    <button class="btn-refresh" onclick="loadOrders()">
+                        <i class="fa-solid fa-rotate"></i> Làm mới
+                    </button>
+                </div>
+                <div class="orders-list" id="ready-orders-list">
+                    <!-- Sẽ được load từ JavaScript -->
+                </div>
+            </section>
+
+            <!-- Completed Orders Tab -->
+            <section class="tab-content" id="completed-orders">
+                <div class="section-header">
+                    <h3>Lịch sử đơn hàng đã hoàn thành</h3>
+                </div>
+                <div class="orders-list" id="completed-orders-list">
+                    <!-- Sẽ được load từ JavaScript -->
+                </div>
+            </section>
+
+            <!-- Products Management Tab -->
+            <section class="tab-content" id="products-management">
+                <div class="section-header">
+                    <h3>Quản lý món ăn</h3>
+                </div>
+                <div class="product-manager">
+                    <div class="add-product-form">
+                        <h4>Thêm món ăn mới</h4>
+                        <label for="category">Chọn nhóm món:</label>
+                        <select id="category">
+                            <option value="mon_chay">Món chay</option>
+                            <option value="mon_man">Món mặn</option>
+                            <option value="mon_lau">Món lẩu</option>
+                            <option value="an_vat">Ăn vặt</option>
+                            <option value="nuoc_uong">Nước uống</option>
+                            <option value="hoa_qua">Hoa quả</option>
+                        </select>
+                        <input autocomplete="off" type="text" id="new-name" placeholder="Tên món">
+                        <input autocomplete="off" type="number" id="new-price" placeholder="Giá (VNĐ)">
+                        <input autocomplete="off" type="text" id="link-img" placeholder="Link ảnh (../img/ten-anh.jpg)">
+                        <input autocomplete="off" type="text" id="new-description" placeholder="Mô tả">
+                        <button onclick="addProduct()" class="btn-add-product">
+                            <i class="fa-solid fa-plus"></i> Thêm món ăn
+                        </button>
+                    </div>
+                    <div id="product-list">
+                        <!-- Sẽ được load từ JavaScript -->
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-    <div class = "footer">
-        <div class="container">
-            <div class="footer_top">
-                <div class="footer_logo">
-                    <img src="../img/Logo_icon.png" alt="DA FOOD">
-                </div>
-                <div class="footer_email">
-                    <div class="footer_email_text">
-                        <h3>Đăng ký nhận tin</h3>
-                        <p>Nhận thông tin mới nhất từ chúng tôi</p>
-                    </div>
-                    <form action="" class="footer_form">
-                        <input autocomplete="off"type="email" placeholder="Nhập email của bạn" required>
-                        <button type="submit">Đăng ký <i class="fa-solid fa-arrow-right"></i></button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer_content">
-                <div class="widget_row">
-                    <div class="widget_row_col">
-                        <h3 class="widget_title">Về chúng tôi</h3>
-                        <div class="widget_row_col_content">
-                            <p>DA Food là thương hiệu được thành lập vào năm 2025 với tiêu chí đặt chất lượng sản phẩm lên hàng đầu.</p>
-                        </div>
-                        <div class="widget_social">
-                            <div class="widget_social_item">
-                                <a href="">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                            </div>
-                            <div class="widget_social_item">
-                                <a href="">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                            </div>
-                            <div class="widget_social_item">
-                                <a href="">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                            </div>
-                            <div class="widget_social_item">
-                                <a href="">
-                                    <i class="fab fa-whatsapp"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="widget_row_col">
-                        <h3 class="widget_title">Liên kết</h3>
-                        <ul class="widget_contact">
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Về chúng tôi</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Thực đơn</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Điều khoản</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Liên hệ</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Tin tức</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="widget_row_col">
-                        <h3 class="widget_title">Thực đơn</h3>
-                        <ul class="widget_contact">
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Điểm tâm</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Món chay</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Món mặn</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Nước uống</span>
-                                </a>
-                            </li>
-                            <li class="widget_contact_item">
-                                <a href="">
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                    <span>Tráng miệng</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="widget_row_col">
-                        <h3 class="widget_title">Liên hệ</h3>
-                        <div class="contact">
-                            <div class="contact_item">
-                                <div class="contact_item_icon">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-                                <div class="contact_content">
-                                    <span>La Tiến, Tống Trân,</span><br>
-                                    <span>Phù Cừ, Hưng Yên</span>
-                                </div>
-                            </div>
-                            <div class="contact_item">
-                                <div class="contact_item_icon">
-                                    <i class="fa-solid fa-phone"></i>
-                                </div>
-                                <div class="contact_content contact_item_phone">
-                                    <span>0123 456 789</span>
-                                    <br>
-                                    <span>0987 654 321</span>
-                                </div>
-                            </div>
-                            <div class="contact_item">
-                                <div class="contact_item_icon">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </div>
-                                <div class="contact_content conatct_item_email">
-                                    <span>dafood@gmail.com</span><br>
-                                    <span>da2k5@gmail.com</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/dn_dk.js"></script>
+    <script src="../js/nhahang.js"></script>
+    <script>
+        // Initialize header
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
+    </script>
 </body>
+</html>
