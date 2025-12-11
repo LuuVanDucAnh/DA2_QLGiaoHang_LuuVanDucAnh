@@ -152,7 +152,7 @@ function updateHeader() {
     const noAccItems = document.querySelectorAll('.no_acc');
     const yesAccItems = document.querySelectorAll('.yes_acc');
     const dangXuatBtn = document.getElementById('dang_xuat');
-    const adminItem = document.getElementById('admin');
+    const adminItem = document.getElementById('luuvanducanh');
 
     if (currentUser) {
         if (textDndk) textDndk.style.display = 'none';
@@ -186,7 +186,9 @@ function updateHeader() {
         yesAccItems.forEach(item => item.style.display = 'none');
     }
 }
-// Phân quyền hiển thị giao diện
+ 
+
+ //Phân quyền hiển thị giao diện
 
 document.addEventListener("DOMContentLoaded", function () {
 
