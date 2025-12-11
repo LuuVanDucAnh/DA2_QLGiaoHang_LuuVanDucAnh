@@ -188,76 +188,71 @@ function updateHeader() {
 }
 // Phân quyền hiển thị giao diện
 
-function updateHeader() {
-    const currentUser = getCurrentUser();
-    const textDndk = document.querySelector('.text_dndk');
-    const textTk = document.querySelector('.text_tk');
-    const noAccItems = document.querySelectorAll('.no_acc');
-    const yesAccItems = document.querySelectorAll('.yes_acc');
+document.addEventListener("DOMContentLoaded", function () {
 
-    const adminItem = document.getElementById('admin');
-    const nhanvienItem = document.getElementById('nhanvien');
-    const shipperItem = document.getElementById('shipper');
-    const dangXuatBtn = document.getElementById('dang_xuat');
+    const textDNDK = document.getElementById("text_dndk");
+    const textTK = document.getElementById("text_tk");
 
-    if (currentUser) {
-        // Hiển thị tên tài khoản
-        if (textDndk) textDndk.style.display = 'none';
-        if (textTk) {
-            textTk.style.display = 'inline';
-            textTk.innerHTML = currentUser.fullname + ' <i class="fa-solid fa-caret-down"></i>';
-        }
+    const admin = document.getElementById("admin");
+    const nhanvien = document.getElementById("nhanvien");
+    const shipper = document.getElementById("shipper");
+    const dangXuat = document.getElementById("dang_xuat");
 
-        // Ẩn/Hiện mục cho người đã đăng nhập
-        noAccItems.forEach(item => item.style.display = 'none');
-        yesAccItems.forEach(item => item.style.display = 'block');
+    const noAcc = document.querySelectorAll(".no_acc");
+    const yesAcc = document.querySelectorAll(".yes_acc");
 
-        // Ẩn tất cả phân quyền trước
-        adminItem.style.display = "none";
-        nhanvienItem.style.display = "none";
-        shipperItem.style.display = "none";
+    // lấy thông tin đăng nhập
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    // CHƯA ĐĂNG NHẬP
+    if (!user) {
+        textDNDK.style.display = "block";
+        textTK.style.display = "none";
 
-        // PHÂN QUYỀN TRUY CẬP MENU
-        switch (currentUser.role) {
-            case "admin":
-                adminItem.style.display = "block";
-                nhanvienItem.style.display = "block";
-                shipperItem.style.display = "block";
-                break;
-
-            case "nhanvien":
-                nhanvienItem.style.display = "block";
-                break;
-
-            case "shipper":
-                shipperItem.style.display = "block";
-                break;
-
-            default:
-                // khách hàng chỉ có Đăng xuất
-                break;
-        }
-
-        // Nút đăng xuất — luôn có cho mọi role
-        if (dangXuatBtn) {
-            dangXuatBtn.style.display = "block";  
-            dangXuatBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                logout();
-            });
-        }
-
-    } else {
-        // CHƯA ĐĂNG NHẬP
-        if (textDndk) textDndk.style.display = 'inline';
-        if (textTk) textTk.style.display = 'none';
-
-        noAccItems.forEach(item => item.style.display = 'block');
-        yesAccItems.forEach(item => item.style.display = 'none');
+        noAcc.forEach(i => i.style.display = "block");
+        yesAcc.forEach(i => i.style.display = "none");
+        return;
     }
-}
 
+    // ĐÃ ĐĂNG NHẬP
+    textDNDK.style.display = "none";
+    textTK.style.display = "block";
+    textTK.textContent = user.username;
 
+    noAcc.forEach(i => i.style.display = "none");
+    yesAcc.forEach(i => i.style.display = "block"); // tất cả yes_acc đều có quyền hiển thị, gồm Đăng xuất
+
+    // KIỂM SOÁT QUYỀN THEO ROLE
+    admin.style.display = "none";
+    nhanvien.style.display = "none";
+    shipper.style.display = "none";
+
+    switch (user.role) {
+        case "Admin":
+            admin.style.display = "block";
+            nhanvien.style.display = "block";
+            shipper.style.display = "block";
+            break;
+
+        case "Nhân Viên":
+            nhanvien.style.display = "block";
+            break;
+
+        case "Shipper":
+            shipper.style.display = "block";
+            break;
+
+        default:
+            // Khách hàng => không có quyền gì
+            break;
+    }
+
+    // Đăng xuất
+    dangXuat.addEventListener("click", function () {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    });
+});
 
 // Khởi tạo
 function initPage() {
