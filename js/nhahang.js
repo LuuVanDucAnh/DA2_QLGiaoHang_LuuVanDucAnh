@@ -522,3 +522,4 @@ function saveProducts() {
     localStorage.setItem('restaurant_products', JSON.stringify(products));
 }
 
+
