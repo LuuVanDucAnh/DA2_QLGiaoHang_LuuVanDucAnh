@@ -226,6 +226,71 @@
             </div>
         </div>
     </div>
+    <!-- Modal Form Đặt Hàng -->
+    <div id="orderFormModal" class="modal">
+        <div class="modal-content order-form-modal">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fa-solid fa-clipboard-list"></i> Thông tin đặt hàng</h2>
+            <form id="orderForm" class="order-form">
+                <div class="form-group">
+                    <label for="customer-name">
+                        <i class="fa-solid fa-user"></i> Họ và tên <span class="required">*</span>
+                    </label>
+                    <input type="text" id="customer-name" name="customerName" required placeholder="Nhập họ và tên của bạn">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-phone">
+                        <i class="fa-solid fa-phone"></i> Số điện thoại <span class="required">*</span>
+                    </label>
+                    <input type="tel" id="customer-phone" name="customerPhone" required placeholder="Nhập số điện thoại">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-address">
+                        <i class="fa-solid fa-location-dot"></i> Địa chỉ giao hàng <span class="required">*</span>
+                    </label>
+                    <textarea id="customer-address" name="customerAddress" required rows="3" placeholder="Nhập địa chỉ giao hàng chi tiết"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment-method">
+                        <i class="fa-solid fa-credit-card"></i> Phương thức thanh toán <span class="required">*</span>
+                    </label>
+                    <select id="payment-method" name="paymentMethod" required>
+                        <option value="">Chọn phương thức thanh toán</option>
+                        <option value="cash">Thanh toán khi nhận hàng (COD)</option>
+                        <option value="bank">Chuyển khoản ngân hàng</option>
+                        <option value="momo">Ví điện tử MoMo</option>
+                        <option value="zalopay">Ví điện tử ZaloPay</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="order-note">
+                        <i class="fa-solid fa-note-sticky"></i> Ghi chú (tùy chọn)
+                    </label>
+                    <textarea id="order-note" name="orderNote" rows="3" placeholder="Ghi chú thêm cho đơn hàng..."></textarea>
+                </div>
+                
+                <div class="order-summary">
+                    <h3>Tóm tắt đơn hàng</h3>
+                    <div id="order-summary-content"></div>
+                    <div class="order-total-summary">
+                        <strong>Tổng tiền: <span id="order-total-summary">0</span> VNĐ</strong>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeOrderForm()">Hủy</button>
+                    <button type="submit" class="btn-submit-order">
+                        <i class="fa-solid fa-check"></i> Xác nhận đặt hàng
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="../js/cart.js"></script>
 </body>
