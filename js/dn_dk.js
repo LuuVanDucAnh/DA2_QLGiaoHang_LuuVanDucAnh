@@ -186,6 +186,78 @@ function updateHeader() {
         yesAccItems.forEach(item => item.style.display = 'none');
     }
 }
+// Phân quyền hiển thị giao diện
+
+function updateHeader() {
+    const currentUser = getCurrentUser();
+    const textDndk = document.querySelector('.text_dndk');
+    const textTk = document.querySelector('.text_tk');
+    const noAccItems = document.querySelectorAll('.no_acc');
+    const yesAccItems = document.querySelectorAll('.yes_acc');
+
+    const adminItem = document.getElementById('admin');
+    const nhanvienItem = document.getElementById('nhanvien');
+    const shipperItem = document.getElementById('shipper');
+    const dangXuatBtn = document.getElementById('dang_xuat');
+
+    if (currentUser) {
+        // Hiển thị tên tài khoản
+        if (textDndk) textDndk.style.display = 'none';
+        if (textTk) {
+            textTk.style.display = 'inline';
+            textTk.innerHTML = currentUser.fullname + ' <i class="fa-solid fa-caret-down"></i>';
+        }
+
+        // Ẩn/Hiện mục cho người đã đăng nhập
+        noAccItems.forEach(item => item.style.display = 'none');
+        yesAccItems.forEach(item => item.style.display = 'block');
+
+        // Ẩn tất cả phân quyền trước
+        adminItem.style.display = "none";
+        nhanvienItem.style.display = "none";
+        shipperItem.style.display = "none";
+
+        // PHÂN QUYỀN TRUY CẬP MENU
+        switch (currentUser.role) {
+            case "admin":
+                adminItem.style.display = "block";
+                nhanvienItem.style.display = "block";
+                shipperItem.style.display = "block";
+                break;
+
+            case "nhanvien":
+                nhanvienItem.style.display = "block";
+                break;
+
+            case "shipper":
+                shipperItem.style.display = "block";
+                break;
+
+            default:
+                // khách hàng chỉ có Đăng xuất
+                break;
+        }
+
+        // Nút đăng xuất — luôn có cho mọi role
+        if (dangXuatBtn) {
+            dangXuatBtn.style.display = "block";  
+            dangXuatBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                logout();
+            });
+        }
+
+    } else {
+        // CHƯA ĐĂNG NHẬP
+        if (textDndk) textDndk.style.display = 'inline';
+        if (textTk) textTk.style.display = 'none';
+
+        noAccItems.forEach(item => item.style.display = 'block');
+        yesAccItems.forEach(item => item.style.display = 'none');
+    }
+}
+
+
 
 // Khởi tạo
 function initPage() {
