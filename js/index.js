@@ -223,4 +223,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cập nhật số lượng giỏ hàng khi tải trang
     updateCartCount();
 });
-

@@ -22,7 +22,7 @@
                         <span class="search_btn">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input autocomplete="off"type="text" placeholder="Tìm kiếm món ăn">
+                        <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
                         <button>
                             <i class="fa-solid fa-filter"></i>
                             Lọc
@@ -84,7 +84,7 @@
                         <p>Nhận thông tin mới nhất từ chúng tôi</p>
                     </div>
                     <form action="" class="footer_form">
-                        <input autocomplete="off"type="email" placeholder="Nhập email của bạn" required>
+                        <input autocomplete="off" type="email" placeholder="Nhập email của bạn" required>
                         <button type="submit">Đăng ký <i class="fa-solid fa-arrow-right"></i></button>
                     </form>
                 </div>
@@ -215,7 +215,7 @@
                                 <div class="contact_item_icon">
                                     <i class="fa-solid fa-envelope"></i>
                                 </div>
-                                <div class="contact_content conatct_item_email">
+                                <div class="contact_content contact_item_email">
                                     <span>dafood@gmail.com</span><br>
                                     <span>da2k5@gmail.com</span>
                                 </div>
@@ -292,5 +292,15 @@
     </div>
 
     <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/dn_dk.js"></script>
     <script src="../js/cart.js"></script>
+    <script>
+        // Khởi tạo trang khi DOM đã tải xong
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
+    </script>
 </body>
+</html>

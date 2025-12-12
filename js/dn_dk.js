@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const yesAcc = document.querySelectorAll(".yes_acc");
 
     // lấy thông tin đăng nhập
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("currentUser"));
     
     // CHƯA ĐĂNG NHẬP
     if (!user) {
@@ -230,6 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     shipper.style.display = "none";
 
     switch (user.role) {
+        case "admin":
         case "Admin":
             admin.style.display = "block";
             nhanvien.style.display = "block";
@@ -237,10 +238,12 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
 
         case "Nhân Viên":
+        case "nhanvien":
             nhanvien.style.display = "block";
             break;
 
         case "Shipper":
+        case "shipper":
             shipper.style.display = "block";
             break;
 
@@ -251,7 +254,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Đăng xuất
     dangXuat.addEventListener("click", function () {
-        localStorage.removeItem("user");
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("loginTime");
         window.location.href = "index.html";
     });
 });

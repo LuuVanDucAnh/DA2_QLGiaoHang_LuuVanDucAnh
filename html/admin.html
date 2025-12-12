@@ -88,4 +88,15 @@
         </div>
     </div>
     
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/dn_dk.js"></script>
+    <script>
+        // Khởi tạo trang khi DOM đã tải xong
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
+    </script>
 </body>
+</html>
