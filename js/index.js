@@ -16,15 +16,35 @@ function getProductData(productItem) {
         productId = Date.now() + Math.random();
     }
     
-    // Tìm sản phẩm trong danh sách để lấy description
-    const foundProduct = products.find(p => p.id == productId);
+    // Tìm sản phẩm trong danh sách để lấy description và restaurantId
+    let foundProduct = null;
+    
+    // Tìm trong products array
+    if (typeof products !== 'undefined') {
+        foundProduct = products.find(p => p.id == productId);
+    }
+    
+    // Nếu không tìm thấy, tìm trong restaurants
+    if (!foundProduct && typeof getAllRestaurants !== 'undefined') {
+        const restaurants = getAllRestaurants();
+        for (const restaurant of restaurants) {
+            if (restaurant.products) {
+                foundProduct = restaurant.products.find(p => p.id == productId);
+                if (foundProduct) {
+                    foundProduct.restaurantId = restaurant.id; // Đảm bảo có restaurantId
+                    break;
+                }
+            }
+        }
+    }
     
     return {
         id: productId,
         name: name ? name.textContent.trim() : '',
         price: price ? parseInt(price.textContent.replace(/[^0-9]/g, '')) : 0,
         image: img ? img.src : '',
-        description: foundProduct ? foundProduct.description : (name ? name.textContent.trim() + ' - Món ăn ngon miệng' : '')
+        description: foundProduct ? foundProduct.description : (name ? name.textContent.trim() + ' - Món ăn ngon miệng' : ''),
+        restaurantId: foundProduct ? foundProduct.restaurantId : null
     };
 }
 
@@ -63,6 +83,9 @@ function openOrderModal(productItem) {
     modal.setAttribute('data-product-price', productData.price);
     modal.setAttribute('data-product-image', productData.image);
     modal.setAttribute('data-product-description', productData.description);
+    if (productData.restaurantId) {
+        modal.setAttribute('data-product-restaurant-id', productData.restaurantId);
+    }
     
     // Hiển thị modal
     modal.style.display = 'block';
@@ -100,6 +123,7 @@ function addToCart() {
     const productPrice = parseInt(modal.getAttribute('data-product-price'));
     const productImage = modal.getAttribute('data-product-image');
     const productDescription = modal.getAttribute('data-product-description');
+    const productRestaurantId = modal.getAttribute('data-product-restaurant-id');
     const quantity = parseInt(document.getElementById('product-quantity').value);
     
     // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
@@ -116,7 +140,8 @@ function addToCart() {
             price: productPrice,
             image: productImage,
             description: productDescription,
-            quantity: quantity
+            quantity: quantity,
+            restaurantId: productRestaurantId // Lưu restaurantId của sản phẩm
         });
     }
     
@@ -136,7 +161,7 @@ function addToCart() {
 // Hàm cập nhật số lượng hiển thị trong giỏ hàng
 function updateCartCount() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartCountElement = document.getElementById('number_items');
+    const cartCountElement = document.getElementById('cart_number_items') || document.getElementById('number_items');
     if (cartCountElement) {
         cartCountElement.textContent = totalItems;
         if (totalItems > 0) {
@@ -198,12 +223,12 @@ document.addEventListener('DOMContentLoaded', function() {
     loadRestaurants();
     
     // Load nhà hàng theo từng category
-    loadRestaurantsByCategory('mon_chay', 'restaurants_mon_chay');
-    loadRestaurantsByCategory('mon_man', 'restaurants_mon_man');
-    loadRestaurantsByCategory('mon_lau', 'restaurants_mon_lau');
-    loadRestaurantsByCategory('an_vat', 'restaurants_an_vat');
-    loadRestaurantsByCategory('hoa_qua', 'restaurants_hoa_qua');
-    loadRestaurantsByCategory('nuoc_uong', 'restaurants_nuoc_uong');
+    loadRestaurantsForCategory('mon_chay', 'restaurants_mon_chay');
+    loadRestaurantsForCategory('mon_man', 'restaurants_mon_man');
+    loadRestaurantsForCategory('mon_lau', 'restaurants_mon_lau');
+    loadRestaurantsForCategory('an_vat', 'restaurants_an_vat');
+    loadRestaurantsForCategory('hoa_qua', 'restaurants_hoa_qua');
+    loadRestaurantsForCategory('nuoc_uong', 'restaurants_nuoc_uong');
     
     // Xóa TẤT CẢ sản phẩm mẫu ngay từ đầu (ẩn phần cũ)
     clearAllSampleProducts();
@@ -284,13 +309,13 @@ document.addEventListener('DOMContentLoaded', function() {
         attachOrderButtonListenersToAll();
     }, 100);
     
-    // Kiểm tra sản phẩm mới mỗi 5 giây (để cập nhật khi nhà hàng thêm sản phẩm)
+    // Kiểm tra và cập nhật nhà hàng mỗi 3 giây (để cập nhật khi nhà hàng thêm sản phẩm)
     setInterval(() => {
-        loadProductsFromRestaurant();
+        checkAndUpdateRestaurants();
         setTimeout(() => {
             attachOrderButtonListenersToAll();
         }, 100);
-    }, 5000);
+    }, 3000);
 });
 
 // Hàm load và hiển thị danh sách nhà hàng
@@ -319,30 +344,84 @@ function loadRestaurants() {
     restaurantsList.innerHTML = restaurants.map(restaurant => createRestaurantCardHTML(restaurant)).join('');
 }
 
-// Hàm load nhà hàng theo category
-function loadRestaurantsByCategory(category, containerId) {
+// Hàm load nhà hàng cho một category cụ thể
+function loadRestaurantsForCategory(category, containerId) {
     // Kiểm tra xem hàm getRestaurantsByCategory có tồn tại không
     if (typeof getRestaurantsByCategory === 'undefined') {
         console.error('getRestaurantsByCategory function not found. Make sure restaurants.js is loaded.');
         return;
     }
     
+    // Load lại từ localStorage để đảm bảo dữ liệu mới nhất
     const restaurants = getRestaurantsByCategory(category);
     const container = document.getElementById(containerId);
     
     if (!container) return;
     
-    if (restaurants.length === 0) {
+    // Lọc chỉ lấy nhà hàng có sản phẩm trong category này
+    const restaurantsWithProducts = restaurants.filter(restaurant => {
+        return restaurant.products && restaurant.products.some(p => p.category === category);
+    });
+    
+    if (restaurantsWithProducts.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 40px; color: #999; grid-column: 1 / -1;">
                 <i class="fa-solid fa-store-slash" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
-                <p>Chưa có nhà hàng nào phục vụ ${getCategoryName(category)}</p>
+                <p>Chưa có nhà hàng nào phục vụ món này</p>
             </div>
         `;
         return;
     }
     
-    container.innerHTML = restaurants.map(restaurant => createRestaurantCardHTML(restaurant)).join('');
+    // Hiển thị tối đa 4 nhà hàng mỗi category
+    const restaurantsToShow = restaurantsWithProducts.slice(0, 4);
+    
+    container.innerHTML = restaurantsToShow.map(restaurant => {
+        // Đếm số món trong category này của nhà hàng
+        const productsInCategory = restaurant.products ? restaurant.products.filter(p => p.category === category) : [];
+        const productCount = productsInCategory.length;
+        
+        return `
+            <div class="restaurant-card" data-restaurant-id="${restaurant.id}">
+                <div class="restaurant-image">
+                    <img src="${restaurant.image}" alt="${restaurant.name}" onerror="this.src='./img/Logo_icon.png'">
+                    <div class="restaurant-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <span>${restaurant.rating}</span>
+                    </div>
+                </div>
+                <div class="restaurant-info">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <p class="restaurant-description">${restaurant.description}</p>
+                    <div class="restaurant-details">
+                        <div class="restaurant-detail-item">
+                            <i class="fa-solid fa-utensils"></i>
+                            <span>${productCount} món</span>
+                        </div>
+                        <div class="restaurant-detail-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>${restaurant.deliveryTime}</span>
+                        </div>
+                        <div class="restaurant-detail-item">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span>Tối thiểu: ${restaurant.minOrder.toLocaleString('vi-VN')} VNĐ</span>
+                        </div>
+                    </div>
+                    <div class="restaurant-actions">
+                        <button class="btn-view-menu" onclick="viewRestaurantMenu('${restaurant.id}', '${category}')">
+                            <i class="fa-solid fa-utensils"></i>
+                            Xem thực đơn
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Hàm load nhà hàng theo category (giữ lại để tương thích)
+function loadRestaurantsByCategory(category, containerId) {
+    loadRestaurantsForCategory(category, containerId);
 }
 
 // Hàm lấy tên category tiếng Việt
@@ -391,6 +470,26 @@ function createRestaurantCardHTML(restaurant) {
             </div>
         </div>
     `;
+}
+
+// Hàm kiểm tra và cập nhật nhà hàng khi có thay đổi
+function checkAndUpdateRestaurants() {
+    // Kiểm tra xem có thay đổi không bằng cách so sánh timestamp
+    const lastUpdate = localStorage.getItem('restaurants_last_update');
+    const lastCheck = localStorage.getItem('restaurants_last_check') || '0';
+    
+    if (lastUpdate && lastUpdate !== lastCheck) {
+        // Có thay đổi, cập nhật lại
+        localStorage.setItem('restaurants_last_check', lastUpdate);
+        
+        // Load lại nhà hàng theo từng category
+        loadRestaurantsForCategory('mon_chay', 'restaurants_mon_chay');
+        loadRestaurantsForCategory('mon_man', 'restaurants_mon_man');
+        loadRestaurantsForCategory('mon_lau', 'restaurants_mon_lau');
+        loadRestaurantsForCategory('an_vat', 'restaurants_an_vat');
+        loadRestaurantsForCategory('hoa_qua', 'restaurants_hoa_qua');
+        loadRestaurantsForCategory('nuoc_uong', 'restaurants_nuoc_uong');
+    }
 }
 
 // Hàm xem thực đơn nhà hàng (global function)

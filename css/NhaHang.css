@@ -196,16 +196,23 @@ a {
     font-weight: 400;
 }
 
-#number_items {
+#number_items,
+#cart_number_items,
+#notification_number_items {
     position: absolute;
     top: -13px;
     right: -20px;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-color);
     background-color: var(--orange);
-    padding: 3px 6px;
-    border-radius: 100%;
+    padding: 2px 6px;
+    border-radius: 50%;
     text-align: center;
+    min-width: 18px;
+    height: 18px;
+    line-height: 14px;
+    display: none;
+    font-weight: 600;
 }
 
 .cart a {
@@ -223,6 +230,30 @@ a {
 }
 
 .cart a span {
+    font-size: 14px;
+}
+
+.Notification {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.Notification:hover {
+    color: var(--orange);
+}
+
+.Notification i {
+    font-size: 28px;
+    color: var(--orange);
+    position: relative;
+}
+
+.Notification span {
     font-size: 14px;
 }
 

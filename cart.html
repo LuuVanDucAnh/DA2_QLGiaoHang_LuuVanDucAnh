@@ -34,12 +34,16 @@
                         <li class="account">
                             <i class="fa-solid fa-user"></i>
                             <div class="text">
-                                <span class="text_dndk">Đăng nhập / Đăng ký</span>
-                                <span class="text_tk">Tài khoản <i class="fa-solid fa-caret-down"></i></span>
+                                <span id="text_dndk" class="text_dndk">Đăng nhập / Đăng ký</span>
+                                <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
                             </div>
                             <ul class="account_manager">
-                                <li><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
-                                <li><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                                <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
+                                <li id="nhanvien" class="yes_acc"><a href="NhaHang.html"><i class="fa-solid fa-gear"></i> Quản lý nhà hàng</a></li>
+                                <li id="shipper" class="yes_acc"><a href="Shipper.html"><i class="fa-solid fa-gear"></i> Shipper</a></li>
+                                <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </li>
                         <li class="cart">
@@ -292,6 +296,7 @@
     </div>
 
     <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
     <script src="./js/cart.js"></script>
     <script>

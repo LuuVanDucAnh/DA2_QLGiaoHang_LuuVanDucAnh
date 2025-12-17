@@ -1,5 +1,6 @@
 // Quản lý sản phẩm cho nhà hàng
 let products = JSON.parse(localStorage.getItem('products')) || [];
+let currentRestaurant = null; // Nhà hàng hiện tại của user đang đăng nhập
 
 // Hàm thêm sản phẩm mới
 function addProduct() {
@@ -22,6 +23,13 @@ function addProduct() {
         return;
     }
 
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        alert('Không tìm thấy thông tin nhà hàng. Vui lòng đăng nhập lại!');
+        return;
+    }
+    
     // Tạo sản phẩm mới
     const newProduct = {
         id: Date.now() + Math.random(),
@@ -30,14 +38,19 @@ function addProduct() {
         price: priceNum,
         image: imageLink,
         description: description || name + ' - Món ăn ngon miệng',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        restaurantId: currentUser.restaurantId // Liên kết với nhà hàng
     };
 
-    // Thêm vào danh sách
+    // Thêm vào danh sách products (để tương thích với code cũ)
     products.push(newProduct);
-    
-    // Lưu vào localStorage
     localStorage.setItem('products', JSON.stringify(products));
+    
+    // Đồng bộ vào restaurants data
+    syncProductToRestaurant(newProduct, currentUser.restaurantId);
+    
+    // Đánh dấu có thay đổi để trang chủ tự động cập nhật
+    localStorage.setItem('restaurants_last_update', Date.now().toString());
 
     // Reset form
     document.getElementById('new-name').value = '';
@@ -48,7 +61,7 @@ function addProduct() {
     // Hiển thị lại danh sách
     displayProducts();
     
-    alert('Thêm sản phẩm thành công!');
+    alert('Thêm sản phẩm thành công! Sản phẩm đã được cập nhật trên trang chủ.');
 }
 
 // Hàm xóa sản phẩm
@@ -57,24 +70,34 @@ function deleteAdminProduct(button) {
         return;
     }
 
-    // Tìm sản phẩm từ button
-    const productItem = button.closest('.product_item');
-    if (!productItem) {
-        alert('Không tìm thấy sản phẩm!');
+    // Lấy productId từ data attribute
+    const productId = button.getAttribute('data-product-id');
+    if (!productId) {
+        alert('Không tìm thấy ID sản phẩm!');
         return;
     }
 
-    // Lấy tên sản phẩm để tìm trong danh sách
-    const nameElement = productItem.querySelector('.name-box strong');
-    if (!nameElement) {
-        alert('Không tìm thấy thông tin sản phẩm!');
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        alert('Không tìm thấy thông tin nhà hàng!');
         return;
     }
 
-    const productName = nameElement.textContent.trim();
+    // Xóa khỏi products array
+    products = products.filter(p => p.id != productId);
+    localStorage.setItem('products', JSON.stringify(products));
     
-    // Xóa khỏi danh sách
-    products = products.filter(p => p.name !== productName);
+    // Xóa khỏi restaurant
+    removeProductFromRestaurant(productId, currentUser.restaurantId);
+    
+    // Đánh dấu có thay đổi để trang chủ tự động cập nhật
+    localStorage.setItem('restaurants_last_update', Date.now().toString());
+
+    // Hiển thị lại danh sách
+    displayProducts();
+    
+    alert('Xóa sản phẩm thành công! Sản phẩm đã được xóa khỏi trang chủ.');
     
     // Lưu lại
     localStorage.setItem('products', JSON.stringify(products));
@@ -85,6 +108,41 @@ function deleteAdminProduct(button) {
     alert('Xóa sản phẩm thành công!');
 }
 
+// Hàm đồng bộ sản phẩm vào restaurant
+function syncProductToRestaurant(product, restaurantId) {
+    let restaurants = [];
+    try {
+        const restaurantsData = localStorage.getItem('restaurants');
+        if (restaurantsData) {
+            restaurants = JSON.parse(restaurantsData);
+        }
+    } catch (error) {
+        console.error("Lỗi khi đọc dữ liệu nhà hàng:", error);
+        return;
+    }
+    
+    // Tìm nhà hàng
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    if (!restaurant) {
+        console.error("Không tìm thấy nhà hàng:", restaurantId);
+        return;
+    }
+    
+    // Kiểm tra xem sản phẩm đã tồn tại chưa
+    const existingIndex = restaurant.products.findIndex(p => p.id === product.id);
+    if (existingIndex >= 0) {
+        // Cập nhật sản phẩm
+        restaurant.products[existingIndex] = product;
+    } else {
+        // Thêm sản phẩm mới
+        restaurant.products.push(product);
+    }
+    
+    // Lưu lại
+    localStorage.setItem('restaurants', JSON.stringify(restaurants));
+    console.log('Đã đồng bộ sản phẩm vào nhà hàng:', restaurantId);
+}
+
 // Hàm hiển thị sản phẩm
 function displayProducts() {
     const category = document.getElementById('category').value;
@@ -92,16 +150,52 @@ function displayProducts() {
     
     if (!productList) return;
     
-    // Lọc sản phẩm theo category
-    const filteredProducts = products.filter(p => p.category === category);
-    
-    // Xóa nội dung cũ (giữ lại các sản phẩm mẫu nếu không có sản phẩm nào)
-    if (filteredProducts.length === 0) {
-        return; // Giữ lại sản phẩm mẫu
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        // Hiển thị thông báo nếu chưa có nhà hàng
+        productList.innerHTML = '<p style="padding: 20px; text-align: center;">Chưa có thông tin nhà hàng. Vui lòng đăng nhập lại!</p>';
+        return;
     }
     
-    // Có thể cập nhật để hiển thị sản phẩm từ localStorage
-    // productList.innerHTML = filteredProducts.map(p => createProductHTML(p)).join('');
+    // Lấy sản phẩm từ restaurant của user
+    const restaurant = getRestaurantById(currentUser.restaurantId);
+    if (!restaurant) {
+        productList.innerHTML = '<p style="padding: 20px; text-align: center;">Không tìm thấy nhà hàng!</p>';
+        return;
+    }
+    
+    // Lọc sản phẩm theo category và chỉ lấy sản phẩm của nhà hàng này
+    const filteredProducts = restaurant.products.filter(p => p.category === category);
+    
+    if (filteredProducts.length === 0) {
+        productList.innerHTML = '<p style="padding: 20px; text-align: center;">Chưa có sản phẩm nào trong danh mục này.</p>';
+        return;
+    }
+    
+    // Hiển thị sản phẩm
+    productList.innerHTML = filteredProducts.map(product => createProductHTML(product)).join('');
+}
+
+// Hàm tạo HTML cho sản phẩm
+function createProductHTML(product) {
+    return `
+        <div class="product_item">
+            <div class="border img-box">
+                <img src="${product.image}" alt="${product.name}" onerror="this.src='./img/Logo_icon.png'">
+            </div>
+            <div class="border name-box">
+                <strong>${product.name}</strong>
+            </div>
+            <div class="border price-box">Giá: ${product.price.toLocaleString('vi-VN')} VNĐ</div>
+            <div class="border desc-box">
+                <em>${product.description || ''}</em>
+            </div>
+            <div class="border btn-box">
+                <button onclick="deleteAdminProduct(this)" data-product-id="${product.id}">Xóa</button>
+            </div>
+        </div>
+    `;
 }
 
 // ========== QUẢN LÝ ĐƠN HÀNG ==========
@@ -127,6 +221,13 @@ function showTab(tabName) {
         document.getElementById('orders-tab').classList.add('active');
         document.querySelectorAll('.tab-btn')[1].classList.add('active');
         loadRestaurantOrders();
+        // Scroll đến phần đơn hàng
+        setTimeout(() => {
+            const ordersTab = document.getElementById('orders-tab');
+            if (ordersTab) {
+                ordersTab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
     }
 }
 
@@ -145,10 +246,20 @@ function filterOrders(filter) {
 
 // Hàm load đơn hàng từ localStorage
 function loadRestaurantOrders() {
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        restaurantOrders = [];
+        displayRestaurantOrders();
+        return;
+    }
+    
     const ordersData = localStorage.getItem('restaurant_orders');
     if (ordersData) {
         try {
-            restaurantOrders = JSON.parse(ordersData);
+            const allOrders = JSON.parse(ordersData);
+            // CHỈ LẤY ĐƠN HÀNG CỦA NHÀ HÀNG NÀY
+            restaurantOrders = allOrders.filter(order => order.restaurantId === currentUser.restaurantId);
         } catch (error) {
             console.error('Lỗi khi đọc đơn hàng:', error);
             restaurantOrders = [];
@@ -166,10 +277,20 @@ function displayRestaurantOrders() {
     const ordersList = document.getElementById('orders-list');
     if (!ordersList) return;
     
+    // Lấy thông tin nhà hàng của user hiện tại để đảm bảo chỉ hiển thị đơn hàng của nhà hàng này
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        ordersList.innerHTML = '<p style="padding: 20px; text-align: center;">Chưa có thông tin nhà hàng!</p>';
+        return;
+    }
+    
+    // Đảm bảo chỉ lấy đơn hàng của nhà hàng này (đã filter ở loadRestaurantOrders, nhưng kiểm tra lại để chắc chắn)
+    const myRestaurantOrders = restaurantOrders.filter(order => order.restaurantId === currentUser.restaurantId);
+    
     // Lọc đơn hàng theo filter
-    let filteredOrders = restaurantOrders;
+    let filteredOrders = myRestaurantOrders;
     if (currentOrderFilter !== 'all') {
-        filteredOrders = restaurantOrders.filter(order => {
+        filteredOrders = myRestaurantOrders.filter(order => {
             return order.restaurantStatus === currentOrderFilter;
         });
     }
@@ -244,8 +365,28 @@ function createOrderCardHTML(order) {
             </button>
         `;
     } else if (order.restaurantStatus === 'assigned') {
+        // Lấy tên shipper từ assignedTo
+        let shipperName = 'Chưa xác định';
+        if (order.assignedTo) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const shipper = users.find(u => u.username === order.assignedTo);
+            if (shipper) {
+                shipperName = shipper.fullname || shipper.username;
+            } else {
+                shipperName = order.assignedTo;
+            }
+        } else if (order.shipperId) {
+            // Fallback: nếu có shipperId (đã accept)
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const shipper = users.find(u => u.username === order.shipperId);
+            if (shipper) {
+                shipperName = shipper.fullname || shipper.username;
+            } else {
+                shipperName = order.shipperId;
+            }
+        }
         actionsHTML = `
-            <span style="color: #28a745;">Đã giao cho shipper: ${order.shipperId || 'Chưa xác định'}</span>
+            <span style="color: #28a745;">Đã giao cho shipper: ${shipperName}</span>
         `;
     }
     
@@ -316,6 +457,7 @@ function confirmOrder(orderId) {
     order.confirmedAt = new Date().toISOString();
     
     saveRestaurantOrders();
+    syncCustomerOrders(orderId, order); // Đồng bộ customer_orders
     displayRestaurantOrders();
     updateOrderNotification();
     
@@ -356,6 +498,7 @@ function startPreparing(orderId) {
     order.preparingAt = new Date().toISOString();
     
     saveRestaurantOrders();
+    syncCustomerOrders(orderId, order); // Đồng bộ customer_orders
     displayRestaurantOrders();
     updateOrderNotification();
     
@@ -374,6 +517,7 @@ function markReady(orderId) {
     order.readyAt = new Date().toISOString();
     
     saveRestaurantOrders();
+    syncCustomerOrders(orderId, order); // Đồng bộ customer_orders
     displayRestaurantOrders();
     updateOrderNotification();
     
@@ -414,33 +558,195 @@ function assignToShipper(orderId) {
     
     const selectedShipperUser = shippers[shipperIndex];
     
+    console.log('=== ASSIGN SHIPPER ===');
+    console.log('Order ID:', order.id);
+    console.log('Selected shipper username:', selectedShipperUser.username);
+    console.log('Selected shipper fullname:', selectedShipperUser.fullname);
+    console.log('Order trước khi cập nhật:', {
+        restaurantStatus: order.restaurantStatus,
+        status: order.status,
+        shipperId: order.shipperId,
+        assignedTo: order.assignedTo
+    });
+    
+    // QUAN TRỌNG: Tạo một bản copy của order để tránh reference issues
+    // Cập nhật order object trước
     order.restaurantStatus = 'assigned';
-    order.shipperId = selectedShipperUser.username;
+    order.shipperId = null; // Để shipper tự accept, không set ngay
+    order.assignedTo = selectedShipperUser.username; // Lưu shipper được assign
     order.assignedAt = new Date().toISOString();
     order.status = 'pending'; // Trạng thái cho shipper
     
-    // Lưu vào danh sách đơn hàng cho shipper
-    let shipperOrders = JSON.parse(localStorage.getItem('shipper_orders')) || [];
-    shipperOrders.push(order);
-    localStorage.setItem('shipper_orders', JSON.stringify(shipperOrders));
+    // Tạo bản copy để lưu (tránh reference issues)
+    const orderToSave = {
+        ...order,
+        restaurantStatus: 'assigned',
+        shipperId: null,
+        assignedTo: selectedShipperUser.username,
+        assignedAt: order.assignedAt,
+        status: 'pending'
+    };
+    
+    console.log('Order sau khi cập nhật:', {
+        restaurantStatus: order.restaurantStatus,
+        status: order.status,
+        shipperId: order.shipperId,
+        assignedTo: order.assignedTo
+    });
+    console.log('OrderToSave:', {
+        restaurantStatus: orderToSave.restaurantStatus,
+        status: orderToSave.status,
+        shipperId: orderToSave.shipperId,
+        assignedTo: orderToSave.assignedTo
+    });
+    
+    console.log('=== ASSIGN SHIPPER - ORDER TO SAVE ===');
+    console.log('Order ID:', orderToSave.id);
+    console.log('Assigned to:', orderToSave.assignedTo);
+    console.log('Restaurant status:', orderToSave.restaurantStatus);
+    console.log('Status:', orderToSave.status);
+    console.log('Shipper ID:', orderToSave.shipperId);
+    
+    // QUAN TRỌNG: Lưu vào restaurant_orders TRƯỚC
+    // Cập nhật order trong restaurantOrders array
+    const orderIndex = restaurantOrders.findIndex(o => o.id === orderId);
+    if (orderIndex >= 0) {
+        restaurantOrders[orderIndex] = { ...orderToSave };
+    }
     
     saveRestaurantOrders();
+    console.log('Đã lưu vào restaurant_orders');
+    
+    // Kiểm tra lại sau khi lưu
+    const checkRestaurantOrders = JSON.parse(localStorage.getItem('restaurant_orders')) || [];
+    const checkOrder = checkRestaurantOrders.find(o => o.id === order.id);
+    if (checkOrder) {
+        console.log('✓ Kiểm tra restaurant_orders - Order found:', {
+            id: checkOrder.id,
+            restaurantStatus: checkOrder.restaurantStatus,
+            assignedTo: checkOrder.assignedTo,
+            status: checkOrder.status,
+            shipperId: checkOrder.shipperId
+        });
+    } else {
+        console.error('❌ LỖI: Không tìm thấy đơn hàng trong restaurant_orders sau khi lưu!');
+    }
+    
+    // Lưu vào danh sách đơn hàng cho shipper (tránh trùng lặp)
+    // QUAN TRỌNG: Sử dụng orderToSave (bản copy) thay vì order (reference)
+    let shipperOrders = JSON.parse(localStorage.getItem('shipper_orders')) || [];
+    const existingIndex = shipperOrders.findIndex(o => o.id === order.id);
+    if (existingIndex >= 0) {
+        // Cập nhật đơn hàng đã có - sử dụng spread để tạo bản copy mới
+        shipperOrders[existingIndex] = { ...orderToSave };
+        console.log('✓ Cập nhật đơn hàng đã có trong shipper_orders');
+    } else {
+        // Thêm đơn hàng mới - sử dụng spread để tạo bản copy mới
+        shipperOrders.push({ ...orderToSave });
+        console.log('✓ Thêm đơn hàng mới vào shipper_orders');
+    }
+    localStorage.setItem('shipper_orders', JSON.stringify(shipperOrders));
+    console.log('Tổng số đơn trong shipper_orders:', shipperOrders.length);
+    
+    // Kiểm tra lại sau khi lưu vào shipper_orders
+    const checkShipperOrders = JSON.parse(localStorage.getItem('shipper_orders')) || [];
+    const checkShipperOrder = checkShipperOrders.find(o => o.id === order.id);
+    if (checkShipperOrder) {
+        console.log('✓ Kiểm tra shipper_orders - Order found:', {
+            id: checkShipperOrder.id,
+            restaurantStatus: checkShipperOrder.restaurantStatus,
+            assignedTo: checkShipperOrder.assignedTo,
+            status: checkShipperOrder.status,
+            shipperId: checkShipperOrder.shipperId
+        });
+    } else {
+        console.error('❌ LỖI: Không tìm thấy đơn hàng trong shipper_orders sau khi lưu!');
+    }
+    
+    // Đồng bộ customer_orders
+    syncCustomerOrders(orderId, order);
+    
     displayRestaurantOrders();
     updateOrderNotification();
     
-    showNotification(`Đã giao đơn hàng cho shipper: ${selectedShipperUser.fullname || selectedShipperUser.username}!`);
+    // Lấy tên đầy đủ của shipper để hiển thị
+    const shipperDisplayName = selectedShipperUser.fullname || selectedShipperUser.username;
+    showNotification(`Đã giao đơn hàng cho shipper: ${shipperDisplayName}!`);
+}
+
+// Hàm đồng bộ customer_orders khi nhà hàng cập nhật đơn
+function syncCustomerOrders(orderId, updatedOrder) {
+    let customerOrders = JSON.parse(localStorage.getItem('customer_orders')) || [];
+    const customerOrderIndex = customerOrders.findIndex(o => o.id === orderId);
+    if (customerOrderIndex >= 0) {
+        // Cập nhật đơn hàng trong customer_orders
+        customerOrders[customerOrderIndex] = {
+            ...customerOrders[customerOrderIndex],
+            restaurantStatus: updatedOrder.restaurantStatus,
+            status: updatedOrder.status,
+            confirmedAt: updatedOrder.confirmedAt || customerOrders[customerOrderIndex].confirmedAt,
+            preparingAt: updatedOrder.preparingAt || customerOrders[customerOrderIndex].preparingAt,
+            readyAt: updatedOrder.readyAt || customerOrders[customerOrderIndex].readyAt,
+            assignedAt: updatedOrder.assignedAt || customerOrders[customerOrderIndex].assignedAt,
+            assignedTo: updatedOrder.assignedTo || customerOrders[customerOrderIndex].assignedTo,
+            shipperId: updatedOrder.shipperId || customerOrders[customerOrderIndex].shipperId
+        };
+        localStorage.setItem('customer_orders', JSON.stringify(customerOrders));
+        console.log('Đã đồng bộ customer_orders cho đơn:', orderId);
+    }
 }
 
 // Hàm lưu đơn hàng
 function saveRestaurantOrders() {
-    localStorage.setItem('restaurant_orders', JSON.stringify(restaurantOrders));
+    // Lấy tất cả đơn hàng từ localStorage
+    const allOrdersData = localStorage.getItem('restaurant_orders');
+    let allOrders = [];
+    if (allOrdersData) {
+        try {
+            allOrders = JSON.parse(allOrdersData);
+        } catch (error) {
+            console.error('Lỗi khi đọc đơn hàng:', error);
+            allOrders = [];
+        }
+    }
+    
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        return;
+    }
+    
+    // Cập nhật các đơn hàng của nhà hàng này trong allOrders
+    restaurantOrders.forEach(updatedOrder => {
+        const index = allOrders.findIndex(o => o.id === updatedOrder.id);
+        if (index >= 0) {
+            allOrders[index] = updatedOrder;
+        } else {
+            // Nếu không tìm thấy, thêm mới (nhưng chỉ nếu là đơn hàng của nhà hàng này)
+            if (updatedOrder.restaurantId === currentUser.restaurantId) {
+                allOrders.push(updatedOrder);
+            }
+        }
+    });
+    
+    // Lưu lại tất cả đơn hàng
+    localStorage.setItem('restaurant_orders', JSON.stringify(allOrders));
 }
 
 // Hàm cập nhật thông báo đơn hàng mới
 function updateOrderNotification() {
-    const newOrdersCount = restaurantOrders.filter(o => o.restaurantStatus === 'new').length;
+    // Lấy thông tin nhà hàng của user hiện tại
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        return;
+    }
+    
+    // Chỉ đếm đơn hàng mới của nhà hàng này
+    const newOrdersCount = restaurantOrders.filter(o => 
+        o.restaurantStatus === 'new' && o.restaurantId === currentUser.restaurantId
+    ).length;
     const badge = document.getElementById('order-notification-badge');
-    const notificationIcon = document.getElementById('number_items');
+    const notificationIcon = document.getElementById('notification_number_items') || document.getElementById('number_items');
     
     if (badge) {
         if (newOrdersCount > 0) {
@@ -522,8 +828,81 @@ function showNotification(message) {
     }, 3000);
 }
 
+// Hàm xóa sản phẩm khỏi restaurant
+function removeProductFromRestaurant(productId, restaurantId) {
+    let restaurants = [];
+    try {
+        const restaurantsData = localStorage.getItem('restaurants');
+        if (restaurantsData) {
+            restaurants = JSON.parse(restaurantsData);
+        }
+    } catch (error) {
+        console.error("Lỗi khi đọc dữ liệu nhà hàng:", error);
+        return;
+    }
+    
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    if (restaurant) {
+        restaurant.products = restaurant.products.filter(p => p.id != productId);
+        localStorage.setItem('restaurants', JSON.stringify(restaurants));
+        console.log('Đã xóa sản phẩm khỏi nhà hàng:', productId);
+    }
+}
+
+// Hàm load và đồng bộ sản phẩm từ restaurant
+function loadProductsFromRestaurant() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.restaurantId) {
+        return;
+    }
+    
+    const restaurant = getRestaurantById(currentUser.restaurantId);
+    if (restaurant && restaurant.products) {
+        // Đồng bộ sản phẩm từ restaurant vào products array
+        restaurant.products.forEach(product => {
+            const existingIndex = products.findIndex(p => p.id === product.id);
+            if (existingIndex >= 0) {
+                products[existingIndex] = product;
+            } else {
+                products.push(product);
+            }
+        });
+        localStorage.setItem('products', JSON.stringify(products));
+    }
+}
+
 // Khởi tạo khi DOM đã tải
 document.addEventListener('DOMContentLoaded', function() {
+    // Kiểm tra đăng nhập
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        alert('Vui lòng đăng nhập!');
+        window.location.href = 'sign_in.html';
+        return;
+    }
+    
+    // Nếu là tài khoản nhà hàng, đảm bảo có restaurantId
+    if ((currentUser.role === 'nhanvien' || currentUser.role === 'Nhà hàng') && !currentUser.restaurantId) {
+        // Tự động tạo restaurantId nếu chưa có
+        const restaurantId = 'rest_' + Date.now();
+        currentUser.restaurantId = restaurantId;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // Cập nhật trong users array
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = users.findIndex(u => u.username === currentUser.username);
+        if (userIndex >= 0) {
+            users[userIndex].restaurantId = restaurantId;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        // Tạo nhà hàng mới
+        createRestaurantForUser(restaurantId, currentUser.fullname, currentUser.username);
+    }
+    
+    // Load và đồng bộ sản phẩm từ restaurant
+    loadProductsFromRestaurant();
+    
     // Load sản phẩm từ localStorage
     products = JSON.parse(localStorage.getItem('products')) || [];
     

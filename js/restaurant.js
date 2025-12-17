@@ -109,23 +109,13 @@ function loadRestaurantProducts(restaurantId) {
     
     // Hiển thị sản phẩm
     productsContainer.innerHTML = restaurantProducts.map(product => {
-        // Cập nhật products array để getProductData có thể tìm thấy
-        if (typeof products !== 'undefined') {
-            const existingIndex = products.findIndex(p => p.id === product.id);
-            if (existingIndex === -1) {
-                products.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                    description: product.description,
-                    category: product.category
-                });
-            }
+        // Đảm bảo product có restaurantId
+        if (!product.restaurantId) {
+            product.restaurantId = restaurantId;
         }
         
         return `
-            <div class="product_item" data-product-id="${product.id}">
+            <div class="product_item" data-product-id="${product.id}" data-restaurant-id="${restaurantId}">
                 <img src="${product.image}" alt="${product.name}" onerror="this.src='./img/Logo_icon.png'">
                 <h3>${product.name}</h3>
                 <p>${product.price.toLocaleString('vi-VN')} VNĐ</p>

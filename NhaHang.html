@@ -49,17 +49,16 @@
                         <li class="cart">
                             <a href="cart.html">
                                 <i class="fa-solid fa-cart-shopping"> 
-                                <div id="number_items">0</div>
+                                <div id="cart_number_items">0</div>
                             </i>
                             <span>Giỏ hàng</span>
                             </a>
                         </li>
-                        <li class="Notification">
+                        <li class="Notification" onclick="showTab('orders')" style="cursor: pointer;">
                             <i class="fa-solid fa-bell">
-                                <div id="number_items">0</div>
+                                <div id="notification_number_items">0</div>
                             </i>
                             <span>Thông báo đặt hàng</span>
-                            
                         </li>
                     </ul>
                 </div>
@@ -354,7 +353,9 @@
     </div>
 
 <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
+    <script src="./js/restaurants.js"></script>
     <script src="./js/nhahang.js"></script>
     <script>
         // Initialize header

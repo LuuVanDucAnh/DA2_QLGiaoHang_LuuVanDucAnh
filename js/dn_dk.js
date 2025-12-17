@@ -127,6 +127,15 @@ function register() {
         role: role
     };
 
+    // Nếu là tài khoản nhà hàng, tạo nhà hàng mới
+    if (role === "nhanvien" || role === "Nhà hàng") {
+        const restaurantId = 'rest_' + Date.now();
+        newUser.restaurantId = restaurantId;
+        
+        // Tạo nhà hàng mới
+        createRestaurantForUser(restaurantId, fullname, username);
+    }
+
     users.push(newUser);
 
     try {
@@ -137,6 +146,44 @@ function register() {
         console.error("Lỗi khi lưu dữ liệu:", error);
         alert("Có lỗi xảy ra! Vui lòng thử lại.");
     }
+}
+
+// Hàm tạo nhà hàng cho user
+function createRestaurantForUser(restaurantId, fullname, username) {
+    let restaurants = [];
+    try {
+        const restaurantsData = localStorage.getItem('restaurants');
+        if (restaurantsData) {
+            restaurants = JSON.parse(restaurantsData);
+        }
+    } catch (error) {
+        console.error("Lỗi khi đọc dữ liệu nhà hàng:", error);
+    }
+    
+    // Kiểm tra xem nhà hàng đã tồn tại chưa
+    const existingRestaurant = restaurants.find(r => r.id === restaurantId);
+    if (existingRestaurant) {
+        return; // Nhà hàng đã tồn tại
+    }
+    
+    // Tạo nhà hàng mới
+    const newRestaurant = {
+        id: restaurantId,
+        name: fullname || username + ' Restaurant',
+        description: 'Nhà hàng của ' + fullname,
+        image: './img/Logo_icon.png',
+        address: 'Chưa cập nhật',
+        phone: 'Chưa cập nhật',
+        rating: 5.0,
+        deliveryTime: '30-45 phút',
+        minOrder: 50000,
+        ownerUsername: username, // Liên kết với tài khoản
+        products: []
+    };
+    
+    restaurants.push(newRestaurant);
+    localStorage.setItem('restaurants', JSON.stringify(restaurants));
+    console.log('Đã tạo nhà hàng mới:', restaurantId);
 }
 
 // Hàm đăng xuất
@@ -323,50 +370,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Hàm khởi tạo tài khoản admin mặc định
-function initializeDefaultAdmin() {
-    try {
-        const usersData = localStorage.getItem("users");
-        let users = [];
-        
-        if (usersData) {
-            users = JSON.parse(usersData);
-        }
-        
-        // Kiểm tra xem đã có tài khoản admin chưa
-        const adminExists = users.some(user => user.username.toLowerCase() === "admin");
-        
-        if (!adminExists) {
-            // Tạo tài khoản admin mặc định
-            const defaultAdmin = {
-                fullname: "Administrator",
-                username: "admin",
-                password: "ducanh12345",
-                role: "admin",
-                createdAt: new Date().toISOString()
-            };
-            
-            users.push(defaultAdmin);
-            localStorage.setItem("users", JSON.stringify(users));
-            console.log("Đã tạo tài khoản admin mặc định: admin / ducanh12345");
-        }
-    } catch (error) {
-        console.error("Lỗi khi khởi tạo tài khoản admin:", error);
-    }
-}
+// Các hàm khởi tạo đã được chuyển sang init_sample_data.js
+// Giữ lại để tương thích ngược
 
 // Khởi tạo
 function initPage() {
-    // Tạo tài khoản admin mặc định nếu chưa có
-    initializeDefaultAdmin();
+    // Dữ liệu mẫu được khởi tạo tự động bởi init_sample_data.js
     updateHeader();
-}
-
-// Tự động khởi tạo khi load trang
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeDefaultAdmin();
-    });
-} else {
-    initializeDefaultAdmin();
 }

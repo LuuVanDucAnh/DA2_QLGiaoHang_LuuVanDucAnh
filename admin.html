@@ -18,7 +18,18 @@
                         <a href="index.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
                     </div>
                 </div>
-                
+                <div class="header_top_middle">
+                    <form action="" class="form_search">
+                          <span class="search_btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
+                        <button>
+                            <i class="fa-solid fa-filter"></i>
+                            Lọc
+                        </button>
+                    </form>
+                </div>
                 <div class="header_top_right">
                     <ul class="header_list">
                         <li class="account">
@@ -35,6 +46,14 @@
                                 <li id="shipper" class="yes_acc"><a href="Shipper.html"><i class="fa-solid fa-gear"></i> Shipper</a></li>
                                 <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
+                        </li>
+                        <li class="cart">
+                            <a href="cart.html">
+                                <i class="fa-solid fa-cart-shopping"> 
+                                <div id="cart_number_items">0</div>
+                            </i>
+                            <span>Giỏ hàng</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -89,6 +108,7 @@
     </div>
     
     <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
     <script>
         // Khởi tạo trang khi DOM đã tải xong

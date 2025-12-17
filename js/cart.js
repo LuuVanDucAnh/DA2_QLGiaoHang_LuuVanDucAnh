@@ -94,7 +94,7 @@ function saveCart() {
 // Hàm cập nhật số lượng hiển thị trong giỏ hàng
 function updateCartCount() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartCountElement = document.getElementById('number_items');
+    const cartCountElement = document.getElementById('cart_number_items') || document.getElementById('number_items');
     if (cartCountElement) {
         cartCountElement.textContent = totalItems;
         if (totalItems > 0) {
@@ -204,6 +204,23 @@ function submitOrder(event) {
         return;
     }
     
+    // Kiểm tra tất cả sản phẩm trong giỏ hàng có cùng restaurantId không
+    const restaurantIds = cart.map(item => item.restaurantId).filter(id => id);
+    const uniqueRestaurantIds = [...new Set(restaurantIds)];
+    
+    if (uniqueRestaurantIds.length === 0) {
+        alert('Không thể xác định nhà hàng. Vui lòng thêm sản phẩm vào giỏ hàng lại!');
+        return;
+    }
+    
+    if (uniqueRestaurantIds.length > 1) {
+        alert('Giỏ hàng của bạn có sản phẩm từ nhiều nhà hàng khác nhau. Vui lòng đặt hàng từng nhà hàng một!');
+        return;
+    }
+    
+    // Lấy restaurantId từ sản phẩm đầu tiên
+    const orderRestaurantId = uniqueRestaurantIds[0];
+    
     // Tạo đơn hàng
     const order = {
         id: 'ORD' + Date.now(),
@@ -218,6 +235,7 @@ function submitOrder(event) {
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
         paymentMethod: formData.paymentMethod,
         note: formData.orderNote,
+        restaurantId: orderRestaurantId, // QUAN TRỌNG: Lưu restaurantId của đơn hàng
         status: 'pending', // Chờ nhà hàng xác nhận
         restaurantStatus: 'new', // Trạng thái ở nhà hàng: new, confirmed, preparing, ready, assigned
         shipperId: null,

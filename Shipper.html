@@ -35,12 +35,19 @@
                                 <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </li>
-                        <li class="Notification">
+                        <li class="cart">
+                            <a href="cart.html">
+                                <i class="fa-solid fa-cart-shopping"> 
+                                <div id="cart_number_items">0</div>
+                            </i>
+                            <span>Giỏ hàng</span>
+                            </a>
+                        </li>
+                        <li class="Notification" onclick="document.getElementById('tab-pending').checked = true; document.getElementById('tab-pending').dispatchEvent(new Event('change'));" style="cursor: pointer;">
                             <i class="fa-solid fa-bell">
-                                <div id="number_items"></div>
+                                <div id="notification_number_items">0</div>
                             </i>
                             <span>Thông báo đặt hàng</span>
-                            
                         </li>
                     </ul>
                 </div>
@@ -66,13 +73,13 @@
                 <label for="tab-pending" class="menu-item">
                     <i class="fa-solid fa-clock"></i> 
                     <span>Đơn hàng chờ</span>
-                    <span class="badge">5</span>
+                    <span class="badge" id="badge-pending" style="display: none;">0</span>
                 </label>
 
                 <label for="tab-my-orders" class="menu-item">
                     <i class="fa-solid fa-motorcycle"></i> 
                     <span>Đơn hàng của tôi</span>
-                    <span class="badge">3</span>
+                    <span class="badge" id="badge-my-orders" style="display: none;">0</span>
                 </label>
 
                 <label for="tab-completed" class="menu-item">
@@ -98,94 +105,30 @@
                 <div class="stats">
                     <div class="card">
                         <i class="fa-solid fa-clock"></i>
-                        <span>5</span>
+                        <span id="stat-pending">0</span>
                         <p>Đơn hàng chờ</p>
                     </div>
                     <div class="card">
                         <i class="fa-solid fa-motorcycle"></i>
-                        <span>3</span>
+                        <span id="stat-in-progress">0</span>
                         <p>Đang giao</p>
                     </div>
                     <div class="card">
                         <i class="fa-solid fa-check-circle"></i>
-                        <span>12</span>
+                        <span id="stat-completed">0</span>
                         <p>Đã giao</p>
                     </div>
                     <div class="card">
                         <i class="fa-solid fa-money-bill-wave"></i>
-                        <span>350.000 VNĐ</span>
+                        <span id="stat-earnings">0 VNĐ</span>
                         <p>Tổng thu nhập</p>
                     </div>
                 </div>
 
                 <div class="recent-orders">
                     <h4>Đơn hàng gần đây</h4>
-                    <div class="orders-list">
-                        <div class="order-card">
-                            <div class="order-header">
-                                <span class="order-id">Đơn hàng #ORD001</span>
-                                <span class="order-status completed">Đã giao</span>
-                            </div>
-                            <div class="order-info">
-                                <div class="info-item">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span><strong>Khách hàng:</strong> Nguyễn Văn A</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span><strong>SĐT:</strong> 0123456789</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span><strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-clock"></i>
-                                    <span><strong>Thời gian:</strong> 25/12/2024, 14:30</span>
-                                </div>
-                            </div>
-                            <div class="order-total">
-                                Tổng tiền: 110.000 VNĐ
-                            </div>
-                            <div class="order-actions">
-                                <button class="btn-action btn-detail">
-                                    <i class="fa-solid fa-eye"></i> Chi tiết
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="order-card">
-                            <div class="order-header">
-                                <span class="order-id">Đơn hàng #ORD002</span>
-                                <span class="order-status completed">Đã giao</span>
-                            </div>
-                            <div class="order-info">
-                                <div class="info-item">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span><strong>Khách hàng:</strong> Trần Thị B</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span><strong>SĐT:</strong> 0987654321</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span><strong>Địa chỉ:</strong> 456 Đường XYZ, Quận 2, TP.HCM</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fa-solid fa-clock"></i>
-                                    <span><strong>Thời gian:</strong> 25/12/2024, 15:45</span>
-                                </div>
-                            </div>
-                            <div class="order-total">
-                                Tổng tiền: 250.000 VNĐ
-                            </div>
-                            <div class="order-actions">
-                                <button class="btn-action btn-detail">
-                                    <i class="fa-solid fa-eye"></i> Chi tiết
-                                </button>
-                            </div>
-                        </div>
+                    <div class="orders-list" id="recent-orders-list">
+                        <!-- Đơn hàng sẽ được load động từ JavaScript -->
                     </div>
                 </div>
             </section>
@@ -199,113 +142,6 @@
                     </button>
                 </div>
                 <div class="orders-list">
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD003</span>
-                            <span class="order-status pending">Chờ nhận</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Lê Văn C</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0912345678</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 789 Đường DEF, Quận 3, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 10:15</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 180.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-accept">
-                                <i class="fa-solid fa-check"></i> Nhận đơn
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD004</span>
-                            <span class="order-status pending">Chờ nhận</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Phạm Thị D</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0923456789</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 321 Đường GHI, Quận 4, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 11:30</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 95.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-accept">
-                                <i class="fa-solid fa-check"></i> Nhận đơn
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD005</span>
-                            <span class="order-status pending">Chờ nhận</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Hoàng Văn E</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0934567890</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 654 Đường JKL, Quận 5, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 12:00</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 320.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-accept">
-                                <i class="fa-solid fa-check"></i> Nhận đơn
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -314,120 +150,13 @@
                 <div class="section-header">
                     <h3>Đơn hàng của tôi</h3>
                     <div class="filter-tabs">
-                        <button class="filter-btn active">Tất cả</button>
-                        <button class="filter-btn">Đang lấy</button>
-                        <button class="filter-btn">Đang giao</button>
-                        <button class="filter-btn">Hoàn thành</button>
+                        <button class="filter-btn active" data-filter="all">Tất cả</button>
+                        <button class="filter-btn" data-filter="picking">Đang lấy</button>
+                        <button class="filter-btn" data-filter="delivering">Đang giao</button>
                     </div>
                 </div>
                 <div class="orders-list">
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD006</span>
-                            <span class="order-status picking">Đang lấy hàng</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Nguyễn Thị F</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0945678901</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 987 Đường MNO, Quận 6, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 09:00</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 145.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-delivering">
-                                <i class="fa-solid fa-motorcycle"></i> Bắt đầu giao
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD007</span>
-                            <span class="order-status delivering">Đang giao</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Trần Văn G</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0956789012</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 147 Đường PQR, Quận 7, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 08:30</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 275.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-complete">
-                                <i class="fa-solid fa-check-circle"></i> Hoàn thành
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD008</span>
-                            <span class="order-status delivering">Đang giao</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Lê Thị H</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0967890123</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 258 Đường STU, Quận 8, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Thời gian:</strong> 26/12/2024, 08:00</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 165.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-complete">
-                                <i class="fa-solid fa-check-circle"></i> Hoàn thành
-                            </button>
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Đơn hàng sẽ được load động từ JavaScript -->
                 </div>
             </section>
 
@@ -437,104 +166,7 @@
                     <h3>Lịch sử đơn hàng đã giao</h3>
                 </div>
                 <div class="orders-list">
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD001</span>
-                            <span class="order-status completed">Đã giao</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Nguyễn Văn A</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0123456789</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Hoàn thành:</strong> 25/12/2024, 14:30</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 110.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD002</span>
-                            <span class="order-status completed">Đã giao</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Trần Thị B</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0987654321</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 456 Đường XYZ, Quận 2, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Hoàn thành:</strong> 25/12/2024, 15:45</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 250.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">Đơn hàng #ORD009</span>
-                            <span class="order-status completed">Đã giao</span>
-                        </div>
-                        <div class="order-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-user"></i>
-                                <span><strong>Khách hàng:</strong> Phạm Văn I</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span><strong>SĐT:</strong> 0978901234</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span><strong>Địa chỉ:</strong> 369 Đường VWX, Quận 9, TP.HCM</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-clock"></i>
-                                <span><strong>Hoàn thành:</strong> 25/12/2024, 16:20</span>
-                            </div>
-                        </div>
-                        <div class="order-total">
-                            Tổng tiền: 195.000 VNĐ
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-action btn-detail">
-                                <i class="fa-solid fa-eye"></i> Chi tiết
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Đơn hàng sẽ được load động từ JavaScript -->
                 </div>
             </section>
 
@@ -546,15 +178,15 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h4>Tổng đơn hàng đã giao</h4>
-                        <p>12</p>
+                        <p id="stat-total-completed">0</p>
                     </div>
                     <div class="stat-card">
                         <h4>Tổng thu nhập</h4>
-                        <p>300.000 VNĐ</p>
+                        <p id="stat-total-earnings">0 VNĐ</p>
                     </div>
                     <div class="stat-card">
                         <h4>Đơn hàng hôm nay</h4>
-                        <p>3</p>
+                        <p id="stat-today-orders">0</p>
                     </div>
                     <div class="stat-card">
                         <h4>Đánh giá trung bình</h4>
@@ -562,10 +194,22 @@
                     </div>
                 </div>
             </section>
+            
+            <!-- Order Detail Modal -->
+            <div id="order-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div id="order-detail-content">
+                        <!-- Nội dung sẽ được load động -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
     <script src="./js/shipper.js"></script>
     <script>
