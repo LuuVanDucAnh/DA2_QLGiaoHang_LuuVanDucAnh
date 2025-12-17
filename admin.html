@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./img/Logo_icon.png">
     <link rel="stylesheet" href="./css/admin.css">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <title>DA FOOD</title>
+    <title>Quản trị hệ thống - DA FOOD</title>
 </head>
 <body>
-    <div class = "header">
-        <div class = "header_top">
-            <div class = "container">
+    <div class="header">
+        <div class="header_top">
+            <div class="container">
                 <div class="header_top_left">
                     <div class="header_logo">
                         <a href="index.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
@@ -20,10 +19,10 @@
                 </div>
                 <div class="header_top_middle">
                     <form action="" class="form_search">
-                          <span class="search_btn">
+                        <span class="search_btn">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
+                        <input autocomplete="off" type="text" placeholder="Tìm kiếm...">
                         <button>
                             <i class="fa-solid fa-filter"></i>
                             Lọc
@@ -33,13 +32,13 @@
                 <div class="header_top_right">
                     <ul class="header_list">
                         <li class="account">
-                           <i class="fa-solid fa-user"></i>
-                           <div class="text">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="text">
                                 <span id="text_dndk" class="text_dndk">Đăng nhập / Đăng ký</span>
                                 <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
-                           </div>
-                           <ul class="account_manager">
-                               <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                            </div>
+                            <ul class="account_manager">
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
                                 <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
                                 <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
                                 <li id="nhanvien" class="yes_acc"><a href="NhaHang.html"><i class="fa-solid fa-gear"></i> Quản lý nhà hàng</a></li>
@@ -50,9 +49,9 @@
                         <li class="cart">
                             <a href="cart.html">
                                 <i class="fa-solid fa-cart-shopping"> 
-                                <div id="cart_number_items">0</div>
-                            </i>
-                            <span>Giỏ hàng</span>
+                                    <div id="cart_number_items">0</div>
+                                </i>
+                                <span>Giỏ hàng</span>
                             </a>
                         </li>
                     </ul>
@@ -60,58 +59,282 @@
             </div>
         </div>
     </div>
+
+    <!-- Radio buttons for tab switching (hidden) -->
+    <input type="radio" name="tab" id="tab-dashboard" checked style="display: none;">
+    <input type="radio" name="tab" id="tab-users" style="display: none;">
+    <input type="radio" name="tab" id="tab-restaurants" style="display: none;">
+    <input type="radio" name="tab" id="tab-orders" style="display: none;">
+    <input type="radio" name="tab" id="tab-statistics" style="display: none;">
+
     <div class="main">
         <div class="main_left">
             <nav class="menu">
-                <a href="#" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-                <a href="#"><i class="fa-solid fa-users"></i> Quản lý khách hàng</a>
-                <a href="#"><i class="fa-solid fa-clipboard-list"></i> Quản lý nhân viên </a>
-                <a href="#"><i class="fa-solid fa-book"></i> Quản lý shipper</a>
-                <a href="#"><i class="fa-solid fa-comments"></i> Quản lý món ăn</a>
-                <a href="#"><i class="fa-solid fa-chart-pie"></i> Báo cáo thống kê</a>
+                <label for="tab-dashboard" class="menu-item">
+                    <i class="fa-solid fa-chart-line"></i> 
+                    <span>Dashboard</span>
+                </label>
+
+                <label for="tab-users" class="menu-item">
+                    <i class="fa-solid fa-users"></i> 
+                    <span>Quản lý người dùng</span>
+                </label>
+
+                <label for="tab-restaurants" class="menu-item">
+                    <i class="fa-solid fa-store"></i> 
+                    <span>Quản lý nhà hàng</span>
+                </label>
+
+                <label for="tab-orders" class="menu-item">
+                    <i class="fa-solid fa-clipboard-list"></i> 
+                    <span>Quản lý đơn hàng</span>
+                </label>
+
+                <label for="tab-statistics" class="menu-item">
+                    <i class="fa-solid fa-chart-pie"></i> 
+                    <span>Thống kê</span>
+                </label>
             </nav>
         </div>
+        
         <div class="main_right">
-            <section class="welcome">
-                <h3>Chào mừng, System Administrator</h3>
-                <p>Tổng quan về hệ thống quản lý giao đồ ăn</p>
-            </section>
-            <section class="stats">
-                <div class="card"><i class="fa-solid fa-users"></i> <span>21</span><p>Số khách đặt món</p></div>
-                <div class="card"><i class="fa-solid fa-layer-group"></i> <span>110.000.000</span><p>Doanh thu trong tháng</p></div>
-                <div class="card"><i class="fa-solid fa-file-lines"></i> <span>5</span><p>số lượng nhân viên</p></div>
-                <div class="card"><i class="fa-solid fa-clipboard-check"></i> <span>4</span><p>số lượng shipper</p></div>
+            <!-- Dashboard Tab -->
+            <section class="tab-content" id="dashboard">
+                <div class="welcome">
+                    <h3>Chào mừng, System Administrator</h3>
+                    <p>Tổng quan về hệ thống quản lý giao đồ ăn</p>
+                </div>
+                
+                <div class="stats">
+                    <div class="card">
+                        <i class="fa-solid fa-users"></i>
+                        <span id="stat-total-users">0</span>
+                        <p>Tổng người dùng</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-store"></i>
+                        <span id="stat-total-restaurants">0</span>
+                        <p>Tổng nhà hàng</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span id="stat-total-orders">0</span>
+                        <p>Tổng đơn hàng</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <span id="stat-total-revenue">0 VNĐ</span>
+                        <p>Tổng doanh thu</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span id="stat-customers">0</span>
+                        <p>Khách hàng</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span id="stat-restaurant-staff">0</span>
+                        <p>Nhân viên nhà hàng</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-motorcycle"></i>
+                        <span id="stat-shippers">0</span>
+                        <p>Shipper</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span id="stat-completed-orders">0</span>
+                        <p>Đơn đã hoàn thành</p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="box">
+                        <h4><i class="fa-solid fa-fire"></i> Món ăn bán chạy</h4>
+                        <ul id="best-seller-list">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="box">
+                        <h4><i class="fa-solid fa-chart-line"></i> Nhà hàng hoạt động tốt</h4>
+                        <ul id="top-restaurants-list">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </ul>
+                    </div>
+                </div>
             </section>
 
-            <section class="content">
-                <div class="box">
-                    <h4>Best Seller</h4>
-                    <ul>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        
-                    </ul>
+            <!-- Users Management Tab -->
+            <section class="tab-content" id="users">
+                <div class="section-header">
+                    <h3>Quản lý người dùng</h3>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all" onclick="filterUsers('all')">Tất cả</button>
+                        <button class="filter-btn" data-filter="customer" onclick="filterUsers('customer')">Khách hàng</button>
+                        <button class="filter-btn" data-filter="nhanvien" onclick="filterUsers('nhanvien')">Nhà hàng</button>
+                        <button class="filter-btn" data-filter="shipper" onclick="filterUsers('shipper')">Shipper</button>
+                    </div>
                 </div>
-                <div class="box">
-                    <h4>Món ăn không được ưu chuộng </h4>
-                     <ul>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        <Li><img src="./img/Ba-chi-nuong.jpg">Ba Chỉ Nướng</Li>
-                        
-                    </ul>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Họ tên</th>
+                                <th>Username</th>
+                                <th>Vai trò</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
             </section>
-        
+
+            <!-- Restaurants Management Tab -->
+            <section class="tab-content" id="restaurants">
+                <div class="section-header">
+                    <h3>Quản lý nhà hàng</h3>
+                    <button class="btn-primary" onclick="showAddRestaurantModal()">
+                        <i class="fa-solid fa-plus"></i> Thêm nhà hàng
+                    </button>
+                </div>
+                <div class="restaurants-grid" id="restaurants-grid">
+                    <!-- Sẽ được load từ JavaScript -->
+                </div>
+            </section>
+
+            <!-- Orders Management Tab -->
+            <section class="tab-content" id="orders">
+                <div class="section-header">
+                    <h3>Quản lý đơn hàng</h3>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all" onclick="filterOrders('all')">Tất cả</button>
+                        <button class="filter-btn" data-filter="new" onclick="filterOrders('new')">Đơn mới</button>
+                        <button class="filter-btn" data-filter="confirmed" onclick="filterOrders('confirmed')">Đã xác nhận</button>
+                        <button class="filter-btn" data-filter="preparing" onclick="filterOrders('preparing')">Đang chuẩn bị</button>
+                        <button class="filter-btn" data-filter="ready" onclick="filterOrders('ready')">Sẵn sàng giao</button>
+                        <button class="filter-btn" data-filter="assigned" onclick="filterOrders('assigned')">Đã giao shipper</button>
+                        <button class="filter-btn" data-filter="completed" onclick="filterOrders('completed')">Hoàn thành</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Nhà hàng</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Statistics Tab -->
+            <section class="tab-content" id="statistics">
+                <div class="section-header">
+                    <h3>Thống kê và báo cáo</h3>
+                </div>
+                <div class="stats-grid-large">
+                    <div class="stat-card-large">
+                        <h4>Doanh thu theo tháng</h4>
+                        <div id="monthly-revenue">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </div>
+                    </div>
+                    <div class="stat-card-large">
+                        <h4>Đơn hàng theo trạng thái</h4>
+                        <div id="orders-by-status">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </div>
+                    </div>
+                    <div class="stat-card-large">
+                        <h4>Top 10 món ăn bán chạy</h4>
+                        <div id="top-products-list">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </div>
+                    </div>
+                    <div class="stat-card-large">
+                        <h4>Top 10 nhà hàng</h4>
+                        <div id="top-restaurants-stats">
+                            <!-- Sẽ được load từ JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-    
+
+    <!-- Order Detail Modal -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Chi tiết đơn hàng</h3>
+            <div id="order-detail-content">
+                <!-- Nội dung sẽ được load động -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Restaurant Modal -->
+    <div id="add-restaurant-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Thêm nhà hàng mới</h3>
+            <form id="add-restaurant-form">
+                <div class="form-group">
+                    <label>Tên nhà hàng:</label>
+                    <input type="text" id="restaurant-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Mô tả:</label>
+                    <textarea id="restaurant-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ:</label>
+                    <input type="text" id="restaurant-address" required>
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại:</label>
+                    <input type="text" id="restaurant-phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Link ảnh:</label>
+                    <input type="text" id="restaurant-image">
+                </div>
+                <div class="form-group">
+                    <label>Đơn hàng tối thiểu (VNĐ):</label>
+                    <input type="number" id="restaurant-min-order" value="50000" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Thêm nhà hàng</button>
+                    <button type="button" class="btn-secondary" onclick="closeAddRestaurantModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
+    <script src="./js/restaurants.js"></script>
+    <script src="./js/admin.js"></script>
     <script>
-        // Khởi tạo trang khi DOM đã tải xong
+        // Initialize header
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof initPage === 'function') {
                 initPage();
