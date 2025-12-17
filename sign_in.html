@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../img/Logo.png">
+    <link rel="stylesheet" href="../css/KhachHang.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>DA FOOD</title>
+</head>
+<body>
+    <div class = "header">
+        <div class = "header_top">
+            <div class = "container">
+                <div class="header_top_left">
+                    <div class="header_logo">
+                        <a href="index.html"><img class="Logo_icon" src="../img/Logo_icon.png"></a>
+                    </div>
+                </div>
+                <div class="header_top_middle">
+                    <form action="" class="form_search">
+                          <span class="search_btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
+                        <button>
+                            <i class="fa-solid fa-filter"></i>
+                            Lọc
+                        </button>
+                    </form>
+                </div>
+                <div class="header_top_right">
+                    <ul class="header_list">
+                        <li class="account">
+                           <i class="fa-solid fa-user"></i>
+                           <div class="text">
+                                <span id="text_dndk" class="text_dndk">Đăng nhập / Đăng ký</span>
+                                <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
+                           </div>
+                           <ul class="account_manager">
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                                <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
+                                <li id="nhanvien" class="yes_acc"><a href="NhaHang.html"><i class="fa-solid fa-gear"></i> Quản lý nhà hàng</a></li>
+                                <li id="shipper" class="yes_acc"><a href="Shipper.html"><i class="fa-solid fa-gear"></i> Shipper</a></li>
+                                <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                        <li class="cart">
+                            <a href="cart.html">
+                                <i class="fa-solid fa-cart-shopping">
+                                <div id="number_items">0</div>
+                            </i>
+                            <span>Giỏ hàng</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="main main_sign">
+        <div class="container container_sign">
+            <div class="logo_sign">
+                <img src="../img/Logo_icon.png" alt="">
+            </div>
+            <div class="sign">
+                <h2>Đăng nhập</h2>
+                <div class="infor_account">
+                    <input autocomplete="off" type="text" id="tk" placeholder="Nhập tên tài khoản" required>
+                    <br>
+                    <input autocomplete="off" type="password" id="mk" placeholder="Nhập mật khẩu" required>
+                    <br>
+                    <select id="role" class="input_box" required>
+                        <option value="">Chọn quyền</option>
+                        <option value="khachhang">Khách hàng</option>
+                        <option value="nhanvien">Nhân viên</option>
+                        <option value="shipper">Shipper</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <br>
+                    <button id="login_btn" onclick="login()">Đăng nhập</button>
+                    <br>
+                    <span>Bạn mới biết đến DA FOOD? <a href="sign_up.html">Đăng ký</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class = "footer">
+        <div class="container">
+            <div class="footer_top">
+                <div class="footer_logo">
+                    <img src="../img/Logo_icon.png" alt="DA FOOD">
+                </div>
+                <div class="footer_email">
+                    <div class="footer_email_text">
+                        <h3>Đăng ký nhận tin</h3>
+                        <p>Nhận thông tin mới nhất từ chúng tôi</p>
+                    </div>
+                    <form action="" class="footer_form">
+                        <input autocomplete="off" type="email" placeholder="Nhập email của bạn" required>
+                        <button type="submit">Đăng ký <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer_content">
+                <div class="widget_row">
+                    <div class="widget_row_col">
+                        <h3 class="widget_title">Về chúng tôi</h3>
+                        <div class="widget_row_col_content">
+                            <p>DA Food là thương hiệu được thành lập vào năm 2025 với tiêu chí đặt chất lượng sản phẩm lên hàng đầu.</p>
+                        </div>
+                        <div class="widget_social">
+                            <div class="widget_social_item">
+                                <a href="">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </div>
+                            <div class="widget_social_item">
+                                <a href="">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                            <div class="widget_social_item">
+                                <a href="">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                            <div class="widget_social_item">
+                                <a href="">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget_row_col">
+                        <h3 class="widget_title">Liên kết</h3>
+                        <ul class="widget_contact">
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Về chúng tôi</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Thực đơn</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Điều khoản</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Liên hệ</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Tin tức</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget_row_col">
+                        <h3 class="widget_title">Thực đơn</h3>
+                        <ul class="widget_contact">
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Điểm tâm</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Món chay</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Món mặn</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Nước uống</span>
+                                </a>
+                            </li>
+                            <li class="widget_contact_item">
+                                <a href="">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>Tráng miệng</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget_row_col">
+                        <h3 class="widget_title">Liên hệ</h3>
+                        <div class="contact">
+                            <div class="contact_item">
+                                <div class="contact_item_icon">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div class="contact_content">
+                                    <span>La Tiến, Tống Trân,</span><br>
+                                    <span>Phù Cừ, Hưng Yên</span>
+                                </div>
+                            </div>
+                            <div class="contact_item">
+                                <div class="contact_item_icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div class="contact_content contact_item_phone">
+                                    <span>0123 456 789</span>
+                                    <br>
+                                    <span>0987 654 321</span>
+                                </div>
+                            </div>
+                            <div class="contact_item">
+                                <div class="contact_item_icon">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div class="contact_content contact_item_email">
+                                    <span>dafood@gmail.com</span><br>
+                                    <span>da2k5@gmail.com</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/dn_dk.js"></script>
+    <script>
+        // Khởi tạo trang khi DOM đã tải xong
+        document.addEventListener('DOMContentLoaded', function() {
+            initPage();
+        });
+    </script>
+</body>
+
