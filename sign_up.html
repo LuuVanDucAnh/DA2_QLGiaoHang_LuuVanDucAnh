@@ -65,7 +65,7 @@
                 <img src="./img/Logo_icon.png" alt="">
             </div>
             <div class="sign">
-                <h2>Đăng ký</h2>
+                <h2>Đăng ký tài khoản</h2>
                 <div class="infor_account">
                     <input autocomplete="off" type="text" id="fullname" placeholder="Nhập họ và tên" required>
                     <br>
@@ -75,13 +75,32 @@
                     <br>
                     <input autocomplete="off" type="password" id="mk2" placeholder="Nhập lại mật khẩu" required>
                     <br>
-                    <select id="role" class="input_box" required>
-                        <option value="">Chọn quyền</option>
-                        <option value="khachhang">Khách hàng</option>
-                        <option value="nhanvien">Nhân viên</option>
-                        <option value="shipper">Shipper</option>
-                        <option value="admin">Admin</option>
-                    </select>
+                    <div class="account-type-selection">
+                        <label class="account-type-label">Chọn loại tài khoản:</label>
+                        <div class="account-type-options">
+                            <label class="account-type-option">
+                                <input type="radio" name="accountType" value="khachhang" checked>
+                                <div class="option-card">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>Khách hàng</span>
+                                </div>
+                            </label>
+                            <label class="account-type-option">
+                                <input type="radio" name="accountType" value="nhanvien">
+                                <div class="option-card">
+                                    <i class="fa-solid fa-utensils"></i>
+                                    <span>Nhà hàng</span>
+                                </div>
+                            </label>
+                            <label class="account-type-option">
+                                <input type="radio" name="accountType" value="shipper">
+                                <div class="option-card">
+                                    <i class="fa-solid fa-truck"></i>
+                                    <span>Shipper</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                     <br>
                     <button onclick="register()">Đăng ký</button>
                     <br>

@@ -105,8 +105,25 @@ function updateCartCount() {
     }
 }
 
+// Hàm kiểm tra đăng nhập
+function checkLogin() {
+    const currentUser = localStorage.getItem("currentUser");
+    return currentUser ? JSON.parse(currentUser) : null;
+}
+
 // Hàm mở form đặt hàng
 function placeOrder() {
+    // Kiểm tra đăng nhập trước
+    const user = checkLogin();
+    if (!user) {
+        if (confirm('Bạn cần đăng nhập để đặt hàng. Bạn có muốn chuyển đến trang đăng nhập không?')) {
+            // Lưu lại giỏ hàng trước khi chuyển trang
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'sign_in.html';
+        }
+        return;
+    }
+    
     if (cart.length === 0) {
         alert('Giỏ hàng của bạn đang trống!');
         return;
@@ -120,6 +137,12 @@ function placeOrder() {
     
     // Cập nhật tổng tiền trong form
     document.getElementById('order-total-summary').textContent = totalPrice.toLocaleString('vi-VN');
+    
+    // Điền thông tin khách hàng từ tài khoản đã đăng nhập (nếu có)
+    if (user.fullname) {
+        const nameInput = document.getElementById('customer-name');
+        if (nameInput) nameInput.value = user.fullname;
+    }
     
     // Hiển thị modal
     const modal = document.getElementById('orderFormModal');
@@ -184,18 +207,25 @@ function submitOrder(event) {
     // Tạo đơn hàng
     const order = {
         id: 'ORD' + Date.now(),
-        customer: {
-            name: formData.customerName,
-            phone: formData.customerPhone,
-            address: formData.customerAddress
-        },
-        items: JSON.parse(JSON.stringify(cart)), // Copy mảng cart
+        customerName: formData.customerName,
+        customerPhone: formData.customerPhone,
+        customerAddress: formData.customerAddress,
+        items: JSON.parse(JSON.stringify(cart)).map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+        })),
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
         paymentMethod: formData.paymentMethod,
         note: formData.orderNote,
-        date: new Date().toISOString(),
         status: 'pending', // Chờ nhà hàng xác nhận
-        createdAt: new Date().toLocaleString('vi-VN')
+        restaurantStatus: 'new', // Trạng thái ở nhà hàng: new, confirmed, preparing, ready, assigned
+        shipperId: null,
+        createdAt: new Date().toISOString(),
+        confirmedAt: null,
+        preparingAt: null,
+        readyAt: null,
+        assignedAt: null
     };
     
     // Lưu đơn hàng vào localStorage cho nhà hàng

@@ -76,7 +76,7 @@ a {
 }
 
 .Logo_icon {
-    width: 100%;
+    width: 80%;
     height: 100%;
     
 }
@@ -661,6 +661,289 @@ a {
     color: var(--orange);
     font-weight: 600;
     text-decoration: underline;
+}
+
+/* ========== QUẢN LÝ ĐƠN HÀNG ========== */
+.restaurant-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: var(--orange);
+}
+
+.tab-btn.active {
+    color: var(--orange);
+    border-bottom-color: var(--orange);
+}
+
+.notification-badge {
+    display: inline-block;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 5px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.order-manager {
+    padding: 20px;
+}
+
+.order-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.filter-btn:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+.filter-btn.active {
+    background: var(--orange);
+    color: white;
+    border-color: var(--orange);
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.restaurant-order-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.restaurant-order-card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.order-header strong {
+    font-size: 18px;
+    color: #333;
+}
+
+.order-status {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-new {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-confirmed {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-preparing {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-ready {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status-assigned {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.order-time {
+    color: #666;
+    font-size: 14px;
+}
+
+.order-info {
+    margin-bottom: 15px;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.info-row i {
+    color: var(--orange);
+    width: 20px;
+    margin-top: 3px;
+}
+
+.info-row span {
+    flex: 1;
+    color: #555;
+    font-size: 14px;
+}
+
+.order-items {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.order-items strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.order-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-items li {
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+    color: #666;
+}
+
+.order-items li:last-child {
+    border-bottom: none;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.order-total {
+    font-size: 16px;
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-confirm {
+    background: #28a745;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #218838;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+}
+
+.btn-preparing {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-preparing:hover {
+    background: #e0a800;
+}
+
+.btn-ready {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-ready:hover {
+    background: #138496;
+}
+
+.btn-assign {
+    background: var(--orange);
+    color: white;
+}
+
+.btn-assign:hover {
+    background: #e07540;
 }
 
 

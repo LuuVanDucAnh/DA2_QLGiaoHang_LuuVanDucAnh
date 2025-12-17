@@ -4,6 +4,15 @@ let currentShipper = null;
 let allOrders = [];
 let currentFilter = 'all';
 
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initShipper();
+    });
+} else {
+    initShipper();
+}
+
 // Initialize shipper page
 function initShipper() {
     // Get current user
@@ -24,6 +33,22 @@ function initShipper() {
     
     // Setup menu navigation
     setupMenuNavigation();
+    
+    // Kiểm tra đơn hàng mới mỗi 5 giây
+    setInterval(() => {
+        loadOrders();
+        updateStats();
+        const activeTab = document.querySelector('.tab-content.active');
+        if (activeTab) {
+            if (activeTab.id === 'pending-orders') {
+                loadPendingOrders();
+            } else if (activeTab.id === 'my-orders') {
+                loadMyOrders();
+            } else if (activeTab.id === 'dashboard') {
+                loadDashboard();
+            }
+        }
+    }, 5000);
 }
 
 // Setup event listeners
@@ -57,6 +82,17 @@ function setupEventListeners() {
 
 // Setup menu navigation
 function setupMenuNavigation() {
+    // Handle radio button navigation (for Shipper.html)
+    document.querySelectorAll('input[type="radio"][name="tab"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                const tabId = this.id.replace('tab-', '');
+                showShipperTab(tabId);
+            }
+        });
+    });
+    
+    // Handle menu item clicks (fallback)
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
@@ -70,39 +106,90 @@ function setupMenuNavigation() {
             
             // Show corresponding tab
             const tabId = this.dataset.tab;
-            const tab = document.getElementById(tabId);
-            if (tab) {
-                tab.classList.add('active');
-                
-                // Load data for the tab
-                if (tabId === 'pending-orders') {
-                    loadPendingOrders();
-                } else if (tabId === 'my-orders') {
-                    loadMyOrders();
-                } else if (tabId === 'completed-orders') {
-                    loadCompletedOrders();
-                } else if (tabId === 'statistics') {
-                    loadStatistics();
-                } else if (tabId === 'dashboard') {
-                    loadDashboard();
+            if (tabId) {
+                showShipperTab(tabId);
+            } else {
+                // Try to get from label's for attribute
+                const label = this.closest('label');
+                if (label && label.getAttribute('for')) {
+                    const radioId = label.getAttribute('for');
+                    const radio = document.getElementById(radioId);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.dispatchEvent(new Event('change'));
+                    }
                 }
             }
         });
     });
 }
 
+// Show shipper tab
+function showShipperTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    
+    // Show selected tab
+    let tab = null;
+    if (tabId === 'dashboard') {
+        tab = document.getElementById('dashboard');
+    } else if (tabId === 'pending') {
+        tab = document.getElementById('pending-orders');
+    } else if (tabId === 'my-orders') {
+        tab = document.getElementById('my-orders');
+    } else if (tabId === 'completed') {
+        tab = document.getElementById('completed-orders');
+    } else if (tabId === 'statistics') {
+        tab = document.getElementById('statistics');
+    }
+    
+    if (tab) {
+        tab.classList.add('active');
+        
+        // Load data for the tab
+        if (tabId === 'pending' || tabId === 'pending-orders') {
+            loadPendingOrders();
+        } else if (tabId === 'my-orders') {
+            loadMyOrders();
+        } else if (tabId === 'completed' || tabId === 'completed-orders') {
+            loadCompletedOrders();
+        } else if (tabId === 'statistics') {
+            loadStatistics();
+        } else if (tabId === 'dashboard') {
+            loadDashboard();
+        }
+    }
+}
+
 // Load all orders
 function loadOrders() {
-    const ordersData = localStorage.getItem('orders');
-    if (ordersData) {
+    // Đọc đơn hàng từ shipper_orders (đơn hàng được nhà hàng giao)
+    const shipperOrdersData = localStorage.getItem('shipper_orders');
+    if (shipperOrdersData) {
         try {
-allOrders = JSON.parse(ordersData);
+            allOrders = JSON.parse(shipperOrdersData);
         } catch (error) {
-            console.error("Error parsing orders:", error);
+            console.error("Error parsing shipper orders:", error);
             allOrders = [];
         }
     } else {
         allOrders = [];
+    }
+    
+    // Cũng đọc từ orders (để tương thích với dữ liệu cũ)
+    const ordersData = localStorage.getItem('orders');
+    if (ordersData) {
+        try {
+            const oldOrders = JSON.parse(ordersData);
+            // Merge với đơn hàng từ shipper_orders, tránh trùng lặp
+            oldOrders.forEach(oldOrder => {
+                if (!allOrders.find(o => o.id === oldOrder.id)) {
+                    allOrders.push(oldOrder);
+                }
+            });
+        } catch (error) {
+            console.error("Error parsing orders:", error);
+        }
     }
     
     // Initialize with sample data if empty
@@ -161,14 +248,30 @@ function loadDashboard() {
 
 // Load recent orders
 function loadRecentOrders() {
-    const recentOrdersContainer = document.getElementById('recent-orders-list');
-    if (!recentOrdersContainer) return;
+    const recentOrdersContainer = document.querySelector('#dashboard .orders-list, #dashboard .recent-orders .orders-list');
+    if (!recentOrdersContainer) {
+        const fallback = document.getElementById('recent-orders-list');
+        if (fallback) {
+            return loadRecentOrdersFallback(fallback);
+        }
+        return;
+    }
 
     // Get recent orders (last 5)
     const myOrders = allOrders.filter(order => 
         order.shipperId === currentShipper.username && 
         order.status === 'completed'
     ).slice(-5).reverse();
+
+    if (myOrders.length === 0) {
+        recentOrdersContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-box-open"></i>
+                <p>Chưa có đơn hàng nào</p>
+            </div>
+        `;
+        return;
+    }
 
     if (myOrders.length === 0) {
         recentOrdersContainer.innerHTML = `
@@ -188,17 +291,61 @@ function loadRecentOrders() {
     attachOrderCardListeners(recentOrdersContainer);
 }
 
+// Fallback function for recent orders
+function loadRecentOrdersFallback(container) {
+    const myOrders = allOrders.filter(order => 
+        order.shipperId === currentShipper.username && 
+        order.status === 'completed'
+    ).slice(-5).reverse();
+
+    if (myOrders.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-box-open"></i>
+                <p>Chưa có đơn hàng nào</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = myOrders.map(order => 
+        createOrderCard(order, false)
+    ).join('');
+    
+    attachOrderCardListeners(container);
+
 // Load pending orders
 function loadPendingOrders() {
-    const pendingOrdersContainer = document.getElementById('pending-orders-list');
-    if (!pendingOrdersContainer) return;
+    const pendingOrdersContainer = document.querySelector('#pending-orders .orders-list');
+    if (!pendingOrdersContainer) {
+        // Fallback nếu không tìm thấy
+        const fallback = document.getElementById('pending-orders-list');
+        if (fallback) {
+            return loadPendingOrdersFallback(fallback);
+        }
+        return;
+    }
 
+    // Lấy đơn hàng từ shipper_orders có status pending và chưa có shipperId
     const pendingOrders = allOrders.filter(order => 
-        order.status === 'pending' && !order.shipperId
+        order.status === 'pending' && 
+        (!order.shipperId || order.shipperId === null) &&
+        order.restaurantStatus === 'assigned'
     );
 
     if (pendingOrders.length === 0) {
 pendingOrdersContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-clock"></i>
+                <p>Không có đơn hàng chờ nào</p>
+            </div>
+        `;
+        updateBadge('badge-pending', 0);
+        return;
+    }
+
+    if (pendingOrders.length === 0) {
+        pendingOrdersContainer.innerHTML = `
             <div class="empty-state">
                 <i class="fa-solid fa-clock"></i>
                 <p>Không có đơn hàng chờ nào</p>
@@ -216,10 +363,40 @@ pendingOrdersContainer.innerHTML = `
     attachOrderCardListeners(pendingOrdersContainer);
 }
 
+// Fallback function for pending orders
+function loadPendingOrdersFallback(container) {
+    const pendingOrders = allOrders.filter(order => 
+        order.status === 'pending' && !order.shipperId
+    );
+
+    if (pendingOrders.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-clock"></i>
+                <p>Không có đơn hàng chờ nào</p>
+            </div>
+        `;
+        updateBadge('badge-pending', 0);
+        return;
+    }
+
+    container.innerHTML = pendingOrders.map(order => 
+        createOrderCard(order, true)
+    ).join('');
+    
+    updateBadge('badge-pending', pendingOrders.length);
+    attachOrderCardListeners(container);
+
 // Load my orders
 function loadMyOrders() {
-    const myOrdersContainer = document.getElementById('my-orders-list');
-    if (!myOrdersContainer) return;
+    const myOrdersContainer = document.querySelector('#my-orders .orders-list');
+    if (!myOrdersContainer) {
+        const fallback = document.getElementById('my-orders-list');
+        if (fallback) {
+            return loadMyOrdersFallback(fallback);
+        }
+        return;
+    }
 
     let myOrders = allOrders.filter(order => 
         order.shipperId === currentShipper.username && 
@@ -247,6 +424,17 @@ function loadMyOrders() {
         return;
     }
 
+    if (myOrders.length === 0) {
+        myOrdersContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-motorcycle"></i>
+                <p>Bạn chưa nhận đơn hàng nào</p>
+            </div>
+        `;
+        updateBadge('badge-my-orders', 0);
+        return;
+    }
+
     myOrdersContainer.innerHTML = myOrders.map(order => 
         createOrderCard(order, false)
     ).join('');
@@ -254,6 +442,40 @@ function loadMyOrders() {
     updateBadge('badge-my-orders', myOrders.length);
     attachOrderCardListeners(myOrdersContainer);
 }
+
+// Fallback function for my orders
+function loadMyOrdersFallback(container) {
+    let myOrders = allOrders.filter(order => 
+        order.shipperId === currentShipper.username && 
+        (order.status === 'picking' || order.status === 'delivering')
+    );
+
+    if (currentFilter !== 'all') {
+        myOrders = myOrders.filter(order => {
+            if (currentFilter === 'picking') return order.status === 'picking';
+            if (currentFilter === 'delivering') return order.status === 'delivering';
+            if (currentFilter === 'completed') return order.status === 'completed';
+            return true;
+        });
+    }
+
+    if (myOrders.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-motorcycle"></i>
+                <p>Bạn chưa nhận đơn hàng nào</p>
+            </div>
+        `;
+        updateBadge('badge-my-orders', 0);
+        return;
+    }
+
+    container.innerHTML = myOrders.map(order => 
+        createOrderCard(order, false)
+    ).join('');
+    
+    updateBadge('badge-my-orders', myOrders.length);
+    attachOrderCardListeners(container);
 
 // Filter my orders
 function filterMyOrders(filter) {
@@ -263,13 +485,29 @@ function filterMyOrders(filter) {
 
 // Load completed orders
 function loadCompletedOrders() {
-    const completedOrdersContainer = document.getElementById('completed-orders-list');
-    if (!completedOrdersContainer) return;
+    const completedOrdersContainer = document.querySelector('#completed-orders .orders-list');
+    if (!completedOrdersContainer) {
+        const fallback = document.getElementById('completed-orders-list');
+        if (fallback) {
+            return loadCompletedOrdersFallback(fallback);
+        }
+        return;
+    }
 
     const completedOrders = allOrders.filter(order => 
         order.shipperId === currentShipper.username && 
         order.status === 'completed'
     ).reverse();
+
+    if (completedOrders.length === 0) {
+        completedOrdersContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-check-circle"></i>
+                <p>Chưa có đơn hàng đã giao</p>
+            </div>
+        `;
+        return;
+    }
 
     if (completedOrders.length === 0) {
         completedOrdersContainer.innerHTML = `
@@ -287,6 +525,29 @@ function loadCompletedOrders() {
     
     attachOrderCardListeners(completedOrdersContainer);
 }
+
+// Fallback function for completed orders
+function loadCompletedOrdersFallback(container) {
+    const completedOrders = allOrders.filter(order => 
+        order.shipperId === currentShipper.username && 
+        order.status === 'completed'
+    ).reverse();
+
+    if (completedOrders.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-check-circle"></i>
+                <p>Chưa có đơn hàng đã giao</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = completedOrders.map(order => 
+        createOrderCard(order, false)
+    ).join('');
+    
+    attachOrderCardListeners(container);
 
 // Create order card HTML
 function createOrderCard(order, showAcceptButton = false) {
@@ -522,7 +783,11 @@ function getStatusText(status) {
 
 // Update statistics
 function updateStats() {
-    const pendingCount = allOrders.filter(o => o.status === 'pending' && !o.shipperId).length;
+    const pendingCount = allOrders.filter(o => 
+        o.status === 'pending' && 
+        (!o.shipperId || o.shipperId === null) &&
+        o.restaurantStatus === 'assigned'
+    ).length;
     const inProgressCount = allOrders.filter(o => 
         o.shipperId === currentShipper.username && 
         (o.status === 'picking' || o.status === 'delivering')
@@ -537,13 +802,30 @@ function updateStats() {
         .filter(o => o.shipperId === currentShipper.username && o.status === 'completed')
         .reduce((sum, o) => sum + (o.total * 0.1), 0);
 
-    document.getElementById('stat-pending').textContent = pendingCount;
-    document.getElementById('stat-in-progress').textContent = inProgressCount;
-    document.getElementById('stat-completed').textContent = completedCount;
-    document.getElementById('stat-earnings').textContent = formatPrice(earnings) + ' VNĐ';
+    // Update stats elements if they exist
+    const statPending = document.getElementById('stat-pending');
+    const statInProgress = document.getElementById('stat-in-progress');
+    const statCompleted = document.getElementById('stat-completed');
+    const statEarnings = document.getElementById('stat-earnings');
+    
+    if (statPending) statPending.textContent = pendingCount;
+    if (statInProgress) statInProgress.textContent = inProgressCount;
+    if (statCompleted) statCompleted.textContent = completedCount;
+    if (statEarnings) statEarnings.textContent = formatPrice(earnings) + ' VNĐ';
 
     updateBadge('badge-pending', pendingCount);
     updateBadge('badge-my-orders', inProgressCount);
+    
+    // Update notification badge
+    const notificationBadge = document.querySelector('.Notification #number_items');
+    if (notificationBadge) {
+        if (pendingCount > 0) {
+            notificationBadge.textContent = pendingCount;
+            notificationBadge.style.display = 'block';
+        } else {
+            notificationBadge.style.display = 'none';
+        }
+    }
 }
 // Update badge
 function updateBadge(badgeId, count) {
@@ -581,7 +863,25 @@ function loadStatistics() {
 
 // Save orders to localStorage
 function saveOrders() {
+    // Lưu vào cả orders và shipper_orders
     localStorage.setItem('orders', JSON.stringify(allOrders));
+    localStorage.setItem('shipper_orders', JSON.stringify(allOrders));
+    
+    // Cập nhật lại restaurant_orders nếu có thay đổi
+    const restaurantOrders = JSON.parse(localStorage.getItem('restaurant_orders')) || [];
+    allOrders.forEach(order => {
+        const restaurantOrder = restaurantOrders.find(ro => ro.id === order.id);
+        if (restaurantOrder) {
+            // Cập nhật trạng thái từ shipper
+            if (order.status === 'picking' || order.status === 'delivering' || order.status === 'completed') {
+                restaurantOrder.shipperId = order.shipperId;
+                if (order.status === 'completed') {
+                    restaurantOrder.restaurantStatus = 'completed';
+                }
+            }
+        }
+    });
+    localStorage.setItem('restaurant_orders', JSON.stringify(restaurantOrders));
 }
 
 // Format price

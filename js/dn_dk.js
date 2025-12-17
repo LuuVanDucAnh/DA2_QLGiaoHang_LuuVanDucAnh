@@ -34,8 +34,18 @@ function login() {
             localStorage.setItem("currentUser", JSON.stringify(foundUser));
             localStorage.setItem("loginTime", new Date().toISOString());
 
+            // Chuyển hướng dựa vào role
+            let redirectUrl = "index.html";
+            if (foundUser.role === "admin" || foundUser.role === "Admin") {
+                redirectUrl = "admin.html";
+            } else if (foundUser.role === "nhanvien" || foundUser.role === "Nhân Viên") {
+                redirectUrl = "NhaHang.html";
+            } else if (foundUser.role === "shipper" || foundUser.role === "Shipper") {
+                redirectUrl = "Shipper.html";
+            }
+
             alert("Đăng nhập thành công!");
-            window.location.href = "index.html";
+            window.location.href = redirectUrl;
         } else {
             alert("Sai tài khoản hoặc mật khẩu!");
         }
@@ -93,8 +103,21 @@ function register() {
         return;
     }
 
-    // GẮN QUYỀN MẶC ĐỊNH
-    const role = (username === "admin") ? "admin" : "user";
+    // Lấy role từ radio button accountType
+    const accountTypeRadios = document.querySelectorAll('input[name="accountType"]');
+    let role = 'khachhang'; // Mặc định là khách hàng
+    
+    for (const radio of accountTypeRadios) {
+        if (radio.checked) {
+            role = radio.value;
+            break;
+        }
+    }
+    
+    // Nếu username là "admin" thì tự động set role admin
+    if (username.toLowerCase() === "admin") {
+        role = "admin";
+    }
 
     const newUser = {
         fullname: fullname,
@@ -152,7 +175,9 @@ function updateHeader() {
     const noAccItems = document.querySelectorAll('.no_acc');
     const yesAccItems = document.querySelectorAll('.yes_acc');
     const dangXuatBtn = document.getElementById('dang_xuat');
-    const adminItem = document.getElementById('luuvanducanh');
+    const adminItem = document.getElementById('admin');
+    const nhanvienItem = document.getElementById('nhanvien');
+    const shipperItem = document.getElementById('shipper');
 
     if (currentUser) {
         if (textDndk) textDndk.style.display = 'none';
@@ -162,21 +187,48 @@ function updateHeader() {
             textTk.innerHTML = displayName + '<i class="fa-solid fa-caret-down"></i>';
         }
 
+        // Ẩn tất cả menu đăng nhập/đăng ký
         noAccItems.forEach(item => item.style.display = 'none');
-        yesAccItems.forEach(item => item.style.display = 'block');
+        
+        // Ẩn TẤT CẢ menu quản lý trước
+        yesAccItems.forEach(item => item.style.display = 'none');
+        if (adminItem) adminItem.style.display = 'none';
+        if (nhanvienItem) nhanvienItem.style.display = 'none';
+        if (shipperItem) shipperItem.style.display = 'none';
 
-        // PHÂN QUYỀN ADMIN
-        if (currentUser.role === "admin") {
-            adminItem.style.display = "block";
-        } else {
-            adminItem.style.display = "none";
-        }
-
+        // PHÂN QUYỀN - chỉ hiển thị menu phù hợp
+        const userRole = (currentUser.role || '').toLowerCase();
+        
+        // Luôn hiển thị menu đăng xuất
         if (dangXuatBtn) {
+            const dangXuatParent = dangXuatBtn.closest('.yes_acc');
+            if (dangXuatParent) dangXuatParent.style.display = 'block';
+            
             dangXuatBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 logout();
             });
+        }
+        
+        // Hiển thị menu theo role
+        switch (userRole) {
+            case "admin":
+                if (adminItem) adminItem.style.display = "block";
+                if (nhanvienItem) nhanvienItem.style.display = "block";
+                if (shipperItem) shipperItem.style.display = "block";
+                break;
+            case "nhân viên":
+            case "nhanvien":
+                if (nhanvienItem) nhanvienItem.style.display = "block";
+                break;
+            case "shipper":
+                if (shipperItem) shipperItem.style.display = "block";
+                break;
+            case "khachhang":
+            case "user":
+            default:
+                // Khách hàng => không hiển thị menu quản lý nào
+                break;
         }
     } else {
         if (textDndk) textDndk.style.display = 'inline';
@@ -219,36 +271,47 @@ document.addEventListener("DOMContentLoaded", function () {
     // ĐÃ ĐĂNG NHẬP
     textDNDK.style.display = "none";
     textTK.style.display = "block";
-    textTK.textContent = user.username;
+    const displayName = user.fullname || user.username;
+    textTK.innerHTML = displayName + '<i class="fa-solid fa-caret-down"></i>';
 
+    // Ẩn tất cả menu đăng nhập/đăng ký
     noAcc.forEach(i => i.style.display = "none");
-    yesAcc.forEach(i => i.style.display = "block"); // tất cả yes_acc đều có quyền hiển thị, gồm Đăng xuất
+    
+    // Ẩn TẤT CẢ menu quản lý trước, sau đó chỉ hiển thị menu phù hợp
+    if (admin) admin.style.display = "none";
+    if (nhanvien) nhanvien.style.display = "none";
+    if (shipper) shipper.style.display = "none";
+    
+    // Hiển thị menu đăng xuất (luôn hiển thị khi đã đăng nhập)
+    if (dangXuat) {
+        const dangXuatParent = dangXuat.closest('.yes_acc');
+        if (dangXuatParent) dangXuatParent.style.display = "block";
+    }
 
-    // KIỂM SOÁT QUYỀN THEO ROLE
-    admin.style.display = "none";
-    nhanvien.style.display = "none";
-    shipper.style.display = "none";
-
-    switch (user.role) {
+    // KIỂM SOÁT QUYỀN THEO ROLE - chỉ hiển thị menu phù hợp
+    const userRole = (user.role || '').toLowerCase();
+    
+    switch (userRole) {
         case "admin":
-        case "Admin":
-            admin.style.display = "block";
-            nhanvien.style.display = "block";
-            shipper.style.display = "block";
+            if (admin) admin.style.display = "block";
+            if (nhanvien) nhanvien.style.display = "block";
+            if (shipper) shipper.style.display = "block";
             break;
 
-        case "Nhân Viên":
+        case "nhân viên":
         case "nhanvien":
-            nhanvien.style.display = "block";
+            if (nhanvien) nhanvien.style.display = "block";
             break;
 
-        case "Shipper":
         case "shipper":
-            shipper.style.display = "block";
+            if (shipper) shipper.style.display = "block";
             break;
 
+        case "khachhang":
+        case "user":
         default:
-            // Khách hàng => không có quyền gì
+            // Khách hàng => KHÔNG hiển thị bất kỳ menu quản lý nào, chỉ có đăng xuất
+            // Tất cả đã được ẩn ở trên
             break;
     }
 
@@ -260,7 +323,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Hàm khởi tạo tài khoản admin mặc định
+function initializeDefaultAdmin() {
+    try {
+        const usersData = localStorage.getItem("users");
+        let users = [];
+        
+        if (usersData) {
+            users = JSON.parse(usersData);
+        }
+        
+        // Kiểm tra xem đã có tài khoản admin chưa
+        const adminExists = users.some(user => user.username.toLowerCase() === "admin");
+        
+        if (!adminExists) {
+            // Tạo tài khoản admin mặc định
+            const defaultAdmin = {
+                fullname: "Administrator",
+                username: "admin",
+                password: "ducanh12345",
+                role: "admin",
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(defaultAdmin);
+            localStorage.setItem("users", JSON.stringify(users));
+            console.log("Đã tạo tài khoản admin mặc định: admin / ducanh12345");
+        }
+    } catch (error) {
+        console.error("Lỗi khi khởi tạo tài khoản admin:", error);
+    }
+}
+
 // Khởi tạo
 function initPage() {
+    // Tạo tài khoản admin mặc định nếu chưa có
+    initializeDefaultAdmin();
     updateHeader();
+}
+
+// Tự động khởi tạo khi load trang
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDefaultAdmin();
+    });
+} else {
+    initializeDefaultAdmin();
 }

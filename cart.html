@@ -14,7 +14,7 @@
             <div class="container">
                 <div class="header_top_left">
                     <div class="header_logo">
-                        <a href="index.html"><img class="logo_img" src="" alt="DA FOOD"></a>
+                        <a href="index.html"><img class="Logo_icon" src="./img/Logo_icon.png" alt="DA FOOD"></a>
                     </div>
                 </div>
                 <div class="header_top_middle">
@@ -76,7 +76,7 @@
         <div class="container">
             <div class="footer_top">
                 <div class="footer_logo">
-                    <img src="" alt="DA FOOD">
+                    <img src="./img/Logo_icon.png" alt="DA FOOD">
                 </div>
                 <div class="footer_email">
                     <div class="footer_email_text">
@@ -297,6 +297,17 @@
     <script>
         // Khởi tạo trang khi DOM đã tải xong
         document.addEventListener('DOMContentLoaded', function() {
+            // Kiểm tra đăng nhập trước khi vào trang giỏ hàng
+            const currentUser = localStorage.getItem("currentUser");
+            if (!currentUser) {
+                if (confirm('Bạn cần đăng nhập để xem giỏ hàng. Bạn có muốn chuyển đến trang đăng nhập không?')) {
+                    window.location.href = 'sign_in.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+                return;
+            }
+            
             if (typeof initPage === 'function') {
                 initPage();
             }

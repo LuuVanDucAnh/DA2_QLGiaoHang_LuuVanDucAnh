@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./img/Logo_icon.png">
+    <link rel="stylesheet" href="./css/KhachHang.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Thực Đơn Nhà Hàng - DA FOOD</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header_top">
+            <div class="container">
+                <div class="header_top_left">
+                    <div class="header_logo">
+                        <a href="index.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
+                    </div>
+                </div>
+                <div class="header_top_middle">
+                    <form action="" class="form_search">
+                        <span class="search_btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
+                        <button>
+                            <i class="fa-solid fa-filter"></i>
+                            Lọc
+                        </button>
+                    </form>
+                </div>
+                <div class="header_top_right">
+                    <ul class="header_list">
+                        <li class="account">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="text">
+                                <span id="text_dndk" class="text_dndk">Đăng nhập / Đăng ký</span>
+                                <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
+                            </div>
+                            <ul class="account_manager">
+                                <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
+                                <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
+                                <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
+                                <li id="nhanvien" class="yes_acc"><a href="NhaHang.html"><i class="fa-solid fa-gear"></i> Quản lý nhà hàng</a></li>
+                                <li id="shipper" class="yes_acc"><a href="Shipper.html"><i class="fa-solid fa-gear"></i> Shipper</a></li>
+                                <li class="yes_acc"><a id="dang_xuat" href="index.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                        <li class="cart">
+                            <a href="cart.html">
+                                <i class="fa-solid fa-cart-shopping">
+                                    <div id="number_items">0</div>
+                                </i>
+                                <span>Giỏ hàng</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="header_nav">
+            <div class="container">
+                <ul class="nav">
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="#mon_chay">Món Chay</a></li>
+                    <li><a href="#mon_man">Món Mặn</a></li>
+                    <li><a href="#mon_lau">Món Lẩu</a></li>
+                    <li><a href="#an_vat">Ăn Vặt</a></li>
+                    <li><a href="#hoa_qua">Hoa Quả</a></li>
+                    <li><a href="#nuoc_uong">Nước Uống</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="container">
+            <!-- Thông tin nhà hàng -->
+            <div id="restaurant-header" class="restaurant-header">
+                <!-- Sẽ được load động -->
+            </div>
+
+            <!-- Danh sách sản phẩm -->
+            <div class="product">
+                <h2 class="product_title" id="restaurant-menu-title">Thực Đơn</h2>
+                <div id="restaurant-products" class="productContainer">
+                    <!-- Sẽ được load động -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="footer_top">
+                <div class="footer_logo">
+                    <img src="./img/Logo_icon.png" alt="DA FOOD">
+                </div>
+                <div class="footer_email">
+                    <div class="footer_email_text">
+                        <h3>Đăng ký nhận tin</h3>
+                        <p>Nhận thông tin mới nhất từ chúng tôi</p>
+                    </div>
+                    <form action="" class="footer_form">
+                        <input autocomplete="off" type="email" placeholder="Nhập email của bạn" required>
+                        <button type="submit">Đăng ký <i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup cho đặt hàng -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-product-name">Tàu hũ chiên giòn</h2>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modal-product-image" src="" alt="Product">
+                </div>
+                <div class="modal-info">
+                    <p class="modal-price">Giá: <span id="modal-product-price">30.000</span> VNĐ</p>
+                    <p class="modal-description">Mô tả: <span id="modal-product-description">Tàu hũ chiên giòn với tỏi ớt và gia vị.</span></p>
+                    <div class="modal-quantity">
+                        <label>Số lượng:</label>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" id="decrease-qty">-</button>
+                            <input type="number" id="product-quantity" value="1" min="1" readonly>
+                            <button class="quantity-btn" id="increase-qty">+</button>
+                        </div>
+                    </div>
+                    <p class="modal-total">Thành tiền: <span id="modal-total-price">30.000</span> VNĐ</p>
+                    <button class="btn-add-to-cart" id="btn-add-to-cart">Thêm vào giỏ hàng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/dn_dk.js"></script>
+    <script src="./js/restaurants.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/restaurant.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
+    </script>
+</body>
+</html>
+
