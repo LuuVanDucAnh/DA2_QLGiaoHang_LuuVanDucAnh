@@ -227,12 +227,16 @@ function loadOrders() {
                     // Cập nhật đơn hàng đã có (đảm bảo có assignedTo mới nhất từ restaurant_orders)
                     console.log('Cập nhật đơn:', restaurantOrder.id, 'assignedTo:', restaurantOrder.assignedTo);
                     // Merge: giữ lại thông tin từ shipper_orders nếu đã accept, nhưng cập nhật assignedTo từ restaurant_orders
-                    if (!allOrders[existingIndex].shipperId || allOrders[existingIndex].shipperId === null) {
+                    if (!allOrders[existingIndex].shipperId || allOrders[existingIndex].shipperId === null || allOrders[existingIndex].shipperId === '') {
                         // Chưa accept, cập nhật toàn bộ từ restaurant_orders (QUAN TRỌNG: đảm bảo có assignedTo)
-                        allOrders[existingIndex] = { ...restaurantOrder };
+                        // Đảm bảo status là 'pending' nếu chưa accept
+                        allOrders[existingIndex] = { 
+                            ...restaurantOrder,
+                            status: restaurantOrder.status || 'pending' // Đảm bảo có status
+                        };
                         console.log('  -> Đã cập nhật toàn bộ từ restaurant_orders');
                     } else {
-                        // Đã accept, chỉ cập nhật một số trường
+                        // Đã accept, chỉ cập nhật một số trường (không thay đổi status nếu đã accept)
                         allOrders[existingIndex].assignedTo = restaurantOrder.assignedTo;
                         allOrders[existingIndex].restaurantStatus = restaurantOrder.restaurantStatus;
                         console.log('  -> Đã cập nhật assignedTo và restaurantStatus');
@@ -240,7 +244,11 @@ function loadOrders() {
                 } else {
                     // Thêm đơn hàng mới
                     console.log('Thêm đơn mới:', restaurantOrder.id, 'assignedTo:', restaurantOrder.assignedTo);
-                    allOrders.push({ ...restaurantOrder });
+                    // Đảm bảo status là 'pending' cho đơn mới chưa accept
+                    allOrders.push({ 
+                        ...restaurantOrder,
+                        status: restaurantOrder.status || 'pending' // Đảm bảo có status
+                    });
                 }
             });
         } catch (error) {
@@ -417,13 +425,13 @@ function loadPendingOrders() {
             return false;
         }
         
-        // Đơn hàng chưa được shipper accept (shipperId = null)
-        if (order.shipperId && order.shipperId !== null) {
+        // Đơn hàng chưa được shipper accept (shipperId = null hoặc chưa có)
+        if (order.shipperId && order.shipperId !== null && order.shipperId !== '') {
             return false;
         }
         
         // Đơn hàng phải được assign cho shipper này HOẶC chưa assign cho ai cụ thể
-        const assignedToMe = order.assignedTo === currentShipper.username;
+        const assignedToMe = order.assignedTo && order.assignedTo.toLowerCase() === currentShipper.username.toLowerCase();
         const notAssignedToAnyone = !order.assignedTo || order.assignedTo === '';
         
         console.log(`Đơn ${order.id}: assignedTo="${order.assignedTo}", currentShipper.username="${currentShipper.username}", assignedToMe=${assignedToMe}, notAssignedToAnyone=${notAssignedToAnyone}`);
@@ -433,11 +441,14 @@ function loadPendingOrders() {
             return false; // Được assign cho shipper khác
         }
         
-        // Status phải là 'pending' (khi nhà hàng assign, status được set là 'pending')
-        if (order.status !== 'pending') {
-            console.log(`  -> Bỏ qua: status không phải "pending" (${order.status})`);
+        // Đơn hàng chưa hoàn thành (status không phải 'completed' hoặc 'cancelled')
+        if (order.status === 'completed' || order.status === 'cancelled') {
+            console.log(`  -> Bỏ qua: đơn hàng đã ${order.status}`);
             return false;
         }
+        
+        // Status có thể là 'pending', 'assigned', hoặc các trạng thái khác (trừ completed/cancelled)
+        // Không bắt buộc phải là 'pending' vì có thể có đơn hàng cũ với status khác
         
         console.log(`  -> ✓ Đơn hàng hợp lệ!`);
         return true;
@@ -743,6 +754,12 @@ function acceptOrder(orderId) {
         alert('Không tìm thấy đơn hàng!');
         return;
     }
+    
+    // Kiểm tra đơn hàng có được assign cho shipper này không
+    if (order.assignedTo && order.assignedTo.toLowerCase() !== currentShipper.username.toLowerCase()) {
+        alert('Đơn hàng này không được assign cho bạn!');
+        return;
+    }
 
     // Cập nhật đơn hàng
     order.shipperId = currentShipper.username;
@@ -755,7 +772,11 @@ function acceptOrder(orderId) {
     if (restaurantOrder) {
         restaurantOrder.shipperId = currentShipper.username;
         restaurantOrder.status = 'picking';
+        restaurantOrder.acceptedAt = new Date().toISOString();
         localStorage.setItem('restaurant_orders', JSON.stringify(restaurantOrders));
+        
+        // Đồng bộ customer_orders
+        syncCustomerOrdersFromShipper(orderId, restaurantOrder);
     }
 
     saveOrders();
@@ -809,9 +830,17 @@ function updateOrderStatus(orderId, newStatus) {
             restaurantOrder.deliveringAt = new Date().toISOString();
         } else if (newStatus === 'completed') {
             restaurantOrder.completedAt = new Date().toISOString();
-            restaurantOrder.restaurantStatus = 'completed';
+            restaurantOrder.restaurantStatus = 'completed'; // QUAN TRỌNG: Đồng bộ restaurantStatus
         }
+        // Đồng bộ các trường khác
+        restaurantOrder.shipperId = order.shipperId;
+        restaurantOrder.acceptedAt = order.acceptedAt;
+        restaurantOrder.deliveringAt = order.deliveringAt;
+        restaurantOrder.completedAt = order.completedAt;
         localStorage.setItem('restaurant_orders', JSON.stringify(restaurantOrders));
+        
+        // Đồng bộ customer_orders
+        syncCustomerOrdersFromShipper(orderId, restaurantOrder);
     }
 
     saveOrders();
@@ -1012,14 +1041,43 @@ function saveOrders() {
         if (restaurantOrder) {
             // Cập nhật trạng thái từ shipper
             if (order.status === 'picking' || order.status === 'delivering' || order.status === 'completed') {
+                restaurantOrder.status = order.status;
                 restaurantOrder.shipperId = order.shipperId;
+                restaurantOrder.acceptedAt = order.acceptedAt;
+                restaurantOrder.deliveringAt = order.deliveringAt;
+                restaurantOrder.completedAt = order.completedAt;
+                
+                // QUAN TRỌNG: Đồng bộ restaurantStatus khi completed
                 if (order.status === 'completed') {
                     restaurantOrder.restaurantStatus = 'completed';
                 }
+                
+                // Đồng bộ customer_orders
+                syncCustomerOrdersFromShipper(order.id, restaurantOrder);
             }
         }
     });
     localStorage.setItem('restaurant_orders', JSON.stringify(restaurantOrders));
+}
+
+// Đồng bộ customer_orders khi shipper cập nhật đơn hàng
+function syncCustomerOrdersFromShipper(orderId, updatedOrder) {
+    let customerOrders = JSON.parse(localStorage.getItem('customer_orders')) || [];
+    const customerOrderIndex = customerOrders.findIndex(o => o.id === orderId);
+    if (customerOrderIndex >= 0) {
+        // Cập nhật đơn hàng trong customer_orders
+        customerOrders[customerOrderIndex] = {
+            ...customerOrders[customerOrderIndex],
+            status: updatedOrder.status,
+            restaurantStatus: updatedOrder.restaurantStatus,
+            shipperId: updatedOrder.shipperId,
+            acceptedAt: updatedOrder.acceptedAt,
+            deliveringAt: updatedOrder.deliveringAt,
+            completedAt: updatedOrder.completedAt
+        };
+        localStorage.setItem('customer_orders', JSON.stringify(customerOrders));
+        console.log('Đã đồng bộ customer_orders từ shipper cho đơn:', orderId);
+    }
 }
 
 // Format price

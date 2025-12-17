@@ -246,7 +246,7 @@ function updateHeader() {
         // PHÂN QUYỀN - chỉ hiển thị menu phù hợp
         const userRole = (currentUser.role || '').toLowerCase();
         
-        // Luôn hiển thị menu đăng xuất
+        // Luôn hiển thị menu đăng xuất và "Đơn hàng của tôi" cho tất cả người dùng đã đăng nhập
         if (dangXuatBtn) {
             const dangXuatParent = dangXuatBtn.closest('.yes_acc');
             if (dangXuatParent) dangXuatParent.style.display = 'block';
@@ -255,6 +255,13 @@ function updateHeader() {
                 e.preventDefault();
                 logout();
             });
+        }
+        
+        // Hiển thị menu "Đơn hàng của tôi" cho tất cả người dùng đã đăng nhập
+        const myOrdersItem = document.querySelector('.yes_acc a[href="my-orders.html"]');
+        if (myOrdersItem) {
+            const myOrdersParent = myOrdersItem.closest('.yes_acc');
+            if (myOrdersParent) myOrdersParent.style.display = 'block';
         }
         
         // Hiển thị menu theo role

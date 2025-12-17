@@ -221,12 +221,17 @@ function submitOrder(event) {
     // Lấy restaurantId từ sản phẩm đầu tiên
     const orderRestaurantId = uniqueRestaurantIds[0];
     
+    // Lấy thông tin người dùng hiện tại
+    const currentUser = getCurrentUser();
+    
     // Tạo đơn hàng
     const order = {
         id: 'ORD' + Date.now(),
         customerName: formData.customerName,
         customerPhone: formData.customerPhone,
         customerAddress: formData.customerAddress,
+        customerId: currentUser ? currentUser.username : null, // QUAN TRỌNG: Lưu username của người đặt hàng
+        customerUsername: currentUser ? currentUser.username : null, // Tương thích với các tên khác
         items: JSON.parse(JSON.stringify(cart)).map(item => ({
             name: item.name,
             quantity: item.quantity,

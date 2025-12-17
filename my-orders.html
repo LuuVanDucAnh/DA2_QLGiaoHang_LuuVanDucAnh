@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./img/Logo.png">
+    <link rel="icon" href="./img/Logo_icon.png">
     <link rel="stylesheet" href="./css/KhachHang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <title>DA FOOD</title>
+    <title>Đơn hàng của tôi - DA FOOD</title>
 </head>
 <body>
-    <div class = "header">
-        <div class = "header_top">
-            <div class = "container">
+    <div class="header">
+        <div class="header_top">
+            <div class="container">
                 <div class="header_top_left">
                     <div class="header_logo">
                         <a href="index.html"><img class="Logo_icon" src="./img/Logo_icon.png"></a>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="header_top_middle">
                     <form action="" class="form_search">
-                          <span class="search_btn">
+                        <span class="search_btn">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
                         <input autocomplete="off" type="text" placeholder="Tìm kiếm món ăn">
@@ -32,12 +32,12 @@
                 <div class="header_top_right">
                     <ul class="header_list">
                         <li class="account">
-                           <i class="fa-solid fa-user"></i>
-                           <div class="text">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="text">
                                 <span id="text_dndk" class="text_dndk">Đăng nhập / Đăng ký</span>
                                 <span id="text_tk" class="text_tk">Tài khoản<i class="fa-solid fa-caret-down"></i></span>
-                           </div>
-                           <ul class="account_manager">
+                            </div>
+                            <ul class="account_manager">
                                 <li class="no_acc"><a href="sign_in.html"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
                                 <li class="no_acc"><a href="sign_up.html"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
                                 <li id="admin" class="yes_acc"><a href="admin.html"><i class="fa-solid fa-gear"></i> Quản lý cửa hàng</a></li>
@@ -50,67 +50,69 @@
                         <li class="cart">
                             <a href="cart.html">
                                 <i class="fa-solid fa-cart-shopping">
-                                <div id="number_items">0</div>
-                            </i>
-                            <span>Giỏ hàng</span>
+                                    <div id="cart_number_items">0</div>
+                                </i>
+                                <span>Giỏ hàng</span>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>    
-    <div class="main main_sign">
-        <div class="container container_sign">
-            <div class="logo_sign">
-                <img src="./img/Logo_icon.png" alt="">
+    </div>
+
+    <div class="main">
+        <div class="container">
+            <div class="orders-page-header">
+                <h2><i class="fa-solid fa-clipboard-list"></i> Đơn hàng của tôi</h2>
+                <p>Theo dõi tất cả đơn hàng của bạn</p>
             </div>
-            <div class="sign">
-                <h2>Đăng ký tài khoản</h2>
-                <div class="infor_account">
-                    <input autocomplete="off" type="text" id="fullname" placeholder="Nhập họ và tên" required>
-                    <br>
-                    <input autocomplete="off" type="text" id="tk" placeholder="Nhập tên tài khoản" required>
-                    <br>
-                    <input autocomplete="off" type="password" id="mk" placeholder="Nhập mật khẩu" required>
-                    <br>
-                    <input autocomplete="off" type="password" id="mk2" placeholder="Nhập lại mật khẩu" required>
-                    <br>
-                    <div class="account-type-selection">
-                        <label class="account-type-label">Chọn loại tài khoản:</label>
-                        <div class="account-type-options">
-                            <label class="account-type-option">
-                                <input type="radio" name="accountType" value="khachhang" checked>
-                                <div class="option-card">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span>Khách hàng</span>
-                                </div>
-                            </label>
-                            <label class="account-type-option">
-                                <input type="radio" name="accountType" value="nhanvien">
-                                <div class="option-card">
-                                    <i class="fa-solid fa-utensils"></i>
-                                    <span>Nhà hàng</span>
-                                </div>
-                            </label>
-                            <label class="account-type-option">
-                                <input type="radio" name="accountType" value="shipper">
-                                <div class="option-card">
-                                    <i class="fa-solid fa-truck"></i>
-                                    <span>Shipper</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <br>
-                    <button onclick="register()">Đăng ký</button>
-                    <br>
-                    <span>Bạn đã có tài khoản? <a href="sign_in.html">Đăng nhập</a></span>
-                </div>
+
+            <div class="orders-filter-tabs">
+                <button class="filter-tab active" data-filter="all" onclick="filterMyOrders('all')">
+                    <i class="fa-solid fa-list"></i> Tất cả
+                </button>
+                <button class="filter-tab" data-filter="new" onclick="filterMyOrders('new')">
+                    <i class="fa-solid fa-clock"></i> Đơn mới
+                </button>
+                <button class="filter-tab" data-filter="confirmed" onclick="filterMyOrders('confirmed')">
+                    <i class="fa-solid fa-check"></i> Đã xác nhận
+                </button>
+                <button class="filter-tab" data-filter="preparing" onclick="filterMyOrders('preparing')">
+                    <i class="fa-solid fa-utensils"></i> Đang chuẩn bị
+                </button>
+                <button class="filter-tab" data-filter="ready" onclick="filterMyOrders('ready')">
+                    <i class="fa-solid fa-check-circle"></i> Sẵn sàng giao
+                </button>
+                <button class="filter-tab" data-filter="assigned" onclick="filterMyOrders('assigned')">
+                    <i class="fa-solid fa-truck"></i> Đang giao
+                </button>
+                <button class="filter-tab" data-filter="completed" onclick="filterMyOrders('completed')">
+                    <i class="fa-solid fa-check-double"></i> Hoàn thành
+                </button>
+                <button class="filter-tab" data-filter="cancelled" onclick="filterMyOrders('cancelled')">
+                    <i class="fa-solid fa-times-circle"></i> Đã hủy
+                </button>
+            </div>
+
+            <div id="orders-list" class="orders-list-container">
+                <!-- Đơn hàng sẽ được load từ JavaScript -->
             </div>
         </div>
     </div>
-    <div class = "footer">
+
+    <!-- Order Detail Modal -->
+    <div id="order-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fa-solid fa-receipt"></i> Chi tiết đơn hàng</h3>
+            <div id="order-detail-content">
+                <!-- Nội dung sẽ được load động -->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
         <div class="container">
             <div class="footer_top">
                 <div class="footer_logo">
@@ -264,15 +266,20 @@
             </div>
         </div>
     </div>
+
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script src="./js/init_sample_data.js"></script>
     <script src="./js/dn_dk.js"></script>
+    <script src="./js/restaurants.js"></script>
+    <script src="./js/my-orders.js"></script>
     <script>
-        // Khởi tạo trang khi DOM đã tải xong
+        // Initialize header
         document.addEventListener('DOMContentLoaded', function() {
-            initPage();
+            if (typeof initPage === 'function') {
+                initPage();
+            }
         });
     </script>
 </body>
-
+</html>
 
