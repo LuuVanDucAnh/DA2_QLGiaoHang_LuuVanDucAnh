@@ -4,7 +4,7 @@ let currentAdmin = null;
 let currentFilter = 'all';
 let currentOrderFilter = 'all';
 
-// Initialize admin page
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check login
     currentAdmin = getCurrentUser();
@@ -21,17 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Setup menu navigation
     setupMenuNavigation();
-    
-    // Load initial data
+       
     loadDashboard();
     
-    // Setup event listeners
-    setupEventListeners();
+       setupEventListeners();
 });
 
-// Setup menu navigation
+
 function setupMenuNavigation() {
     document.querySelectorAll('input[type="radio"][name="tab"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -45,10 +42,10 @@ function setupMenuNavigation() {
 
 // Show admin tab
 function showAdminTab(tabId) {
-    // Hide all tabs
+    
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     
-    // Show selected tab
+    
     let tab = null;
     if (tabId === 'dashboard') {
         tab = document.getElementById('dashboard');
@@ -72,9 +69,9 @@ function showAdminTab(tabId) {
     }
 }
 
-// Setup event listeners
+
 function setupEventListeners() {
-    // Modal close
+    
     const modals = document.querySelectorAll('.modal');
     const closeButtons = document.querySelectorAll('.close-modal');
     
@@ -122,11 +119,11 @@ function updateDashboardStats() {
     document.getElementById('stat-restaurant-staff').textContent = restaurantStaff.length;
     document.getElementById('stat-shippers').textContent = shippers.length;
     
-    // Total restaurants
+    
     const restaurants = getAllRestaurants();
     document.getElementById('stat-total-restaurants').textContent = restaurants.length;
     
-    // Total orders and revenue
+ 
     const allOrders = JSON.parse(localStorage.getItem('restaurant_orders')) || [];
     const completedOrders = allOrders.filter(o => o.restaurantStatus === 'completed' || o.status === 'completed');
     const totalRevenue = completedOrders.reduce((sum, o) => sum + (o.total || 0), 0);
@@ -141,7 +138,7 @@ function loadBestSellers() {
     const allOrders = JSON.parse(localStorage.getItem('restaurant_orders')) || [];
     const completedOrders = allOrders.filter(o => o.restaurantStatus === 'completed' || o.status === 'completed');
     
-    // Count product sales
+    
     const productSales = {};
     completedOrders.forEach(order => {
         if (order.items) {
