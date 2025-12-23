@@ -507,15 +507,7 @@ function initializeSampleRestaurants() {
                     category: 'hoa_qua',
                     restaurantId: 'rest_005'
                 },
-                {
-                    id: 'prod_042',
-                    name: 'Dứa',
-                    price: 45000,
-                    image: './img/Xoai-chin.jpg',
-                    description: 'Dứa chín ngọt, thơm lừng',
-                    category: 'hoa_qua',
-                    restaurantId: 'rest_005'
-                }
+                
             ]
         },
         {
